@@ -60,12 +60,16 @@ export class BuildingScreen extends React.Component<Props, State> {
         console.log('[BuildingScreen] ========================================');
         console.log('[BuildingScreen] Progress event received!');
         console.log('[BuildingScreen] Event data:', data);
-        console.log('[BuildingScreen] Current props.siteSettings.siteId:', this.props.siteSettings.siteId);
+        console.log(
+          '[BuildingScreen] Current props.siteSettings.siteId:',
+          this.props.siteSettings.siteId
+        );
 
         const { siteId, stage, progress, message } = data;
 
         // Only update if this is our site (or if we don't have a siteId yet)
-        const shouldUpdate = !this.props.siteSettings.siteId || siteId === this.props.siteSettings.siteId;
+        const shouldUpdate =
+          !this.props.siteSettings.siteId || siteId === this.props.siteSettings.siteId;
         console.log('[BuildingScreen] Should update?', shouldUpdate);
 
         if (shouldUpdate) {
@@ -430,7 +434,9 @@ export class BuildingScreen extends React.Component<Props, State> {
                 marginBottom: '16px',
               },
             },
-            this.props.siteSettings.projectName || this.props.siteSettings.siteName || 'Unnamed Site'
+            this.props.siteSettings.projectName ||
+              this.props.siteSettings.siteName ||
+              'Unnamed Site'
           ),
 
           this.props.siteSettings.siteId &&
@@ -483,12 +489,16 @@ export class BuildingScreen extends React.Component<Props, State> {
           ),
 
         // CSS animation for spinner
-        React.createElement('style', null, `
+        React.createElement(
+          'style',
+          null,
+          `
           @keyframes spin {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
           }
-        `)
+        `
+        )
       ),
 
       // Custom stepper with proper state management

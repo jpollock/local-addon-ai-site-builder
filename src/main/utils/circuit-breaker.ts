@@ -284,8 +284,7 @@ export class CircuitBreaker {
  */
 export function isCircuitBreakerOpenError(error: unknown): boolean {
   return (
-    error instanceof CircuitBreakerOpenError ||
-    (error as any)?.name === 'CircuitBreakerOpenError'
+    error instanceof CircuitBreakerOpenError || (error as any)?.name === 'CircuitBreakerOpenError'
   );
 }
 
@@ -298,16 +297,9 @@ export class CircuitBreakerRegistry {
   /**
    * Get or create a circuit breaker
    */
-  getOrCreate(
-    name: string,
-    config?: Partial<CircuitBreakerConfig>,
-    logger?: any
-  ): CircuitBreaker {
+  getOrCreate(name: string, config?: Partial<CircuitBreakerConfig>, logger?: any): CircuitBreaker {
     if (!this.breakers.has(name)) {
-      this.breakers.set(
-        name,
-        new CircuitBreaker({ ...config, name }, logger)
-      );
+      this.breakers.set(name, new CircuitBreaker({ ...config, name }, logger));
     }
     return this.breakers.get(name)!;
   }

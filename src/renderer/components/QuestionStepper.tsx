@@ -24,7 +24,7 @@ export class QuestionStepper extends React.Component<Props> {
           alignItems: 'center',
           padding: '24px 0',
           gap: '8px',
-        }
+        },
       },
       // Render each step
       ...Array.from({ length: totalQuestions }, (_, index) => {
@@ -46,7 +46,7 @@ export class QuestionStepper extends React.Component<Props> {
                 flexDirection: 'column',
                 alignItems: 'center',
                 minWidth: '100px',
-              }
+              },
             },
 
             // Circle indicator
@@ -67,33 +67,22 @@ export class QuestionStepper extends React.Component<Props> {
                     : isCompleted
                       ? '2px solid #51a351'
                       : '2px solid #e0e0e0',
-                  backgroundColor: isCompleted
-                    ? '#51a351'
-                    : isActive
-                      ? '#ffffff'
-                      : '#ffffff',
-                  color: isCompleted
-                    ? '#ffffff'
-                    : isActive
-                      ? '#51a351'
-                      : '#999999',
+                  backgroundColor: isCompleted ? '#51a351' : isActive ? '#ffffff' : '#ffffff',
+                  color: isCompleted ? '#ffffff' : isActive ? '#51a351' : '#999999',
                   transition: 'all 0.2s ease',
-                }
+                },
               },
               isCompleted
                 ? React.createElement('span', null, '✓')
                 : isActive
-                  ? React.createElement(
-                      'div',
-                      {
-                        style: {
-                          width: '10px',
-                          height: '10px',
-                          borderRadius: '50%',
-                          backgroundColor: '#51a351',
-                        }
-                      }
-                    )
+                  ? React.createElement('div', {
+                      style: {
+                        width: '10px',
+                        height: '10px',
+                        borderRadius: '50%',
+                        backgroundColor: '#51a351',
+                      },
+                    })
                   : null
             ),
 
@@ -106,16 +95,15 @@ export class QuestionStepper extends React.Component<Props> {
                   fontSize: '13px',
                   fontWeight: isActive ? 600 : 400,
                   color: isActive ? '#333' : isPending ? '#999' : '#666',
-                }
+                },
               },
               `Question ${stepNumber}`
             )
           ),
 
           // Connector line (except for last step)
-          stepNumber < totalQuestions && React.createElement(
-            'div',
-            {
+          stepNumber < totalQuestions &&
+            React.createElement('div', {
               style: {
                 flex: '1',
                 height: '2px',
@@ -123,9 +111,8 @@ export class QuestionStepper extends React.Component<Props> {
                 marginTop: '-20px', // Align with circles
                 backgroundColor: isCompleted ? '#51a351' : '#e0e0e0',
                 transition: 'background-color 0.2s ease',
-              }
-            }
-          )
+              },
+            })
         );
       })
     );

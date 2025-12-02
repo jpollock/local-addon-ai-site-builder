@@ -286,7 +286,11 @@ export class SectionDetail extends React.Component<SectionDetailProps> {
           'div',
           { style: { display: 'flex', gap: '8px' } },
           this.renderActionButton('Edit', () => onEdit && onEdit('content-type', postType)),
-          this.renderActionButton('Delete', () => onDelete && onDelete('content-type', postType), true)
+          this.renderActionButton(
+            'Delete',
+            () => onDelete && onDelete('content-type', postType),
+            true
+          )
         )
       ),
 
@@ -339,7 +343,11 @@ export class SectionDetail extends React.Component<SectionDetailProps> {
                     fontSize: '13px',
                   },
                 },
-                React.createElement('span', { style: { fontWeight: 500 } }, field.label || field.name),
+                React.createElement(
+                  'span',
+                  { style: { fontWeight: 500 } },
+                  field.label || field.name
+                ),
                 React.createElement(
                   'span',
                   {
@@ -423,7 +431,10 @@ export class SectionDetail extends React.Component<SectionDetailProps> {
     );
 
     if (uniqueTaxonomies.length === 0) {
-      return this.renderEmptyState('No custom taxonomies defined', 'Built-in categories and tags will be available');
+      return this.renderEmptyState(
+        'No custom taxonomies defined',
+        'Built-in categories and tags will be available'
+      );
     }
 
     return React.createElement(
@@ -455,7 +466,11 @@ export class SectionDetail extends React.Component<SectionDetailProps> {
       React.createElement(
         'div',
         null,
-        React.createElement('span', { style: { fontWeight: 500, fontSize: '14px' } }, taxonomy.name),
+        React.createElement(
+          'span',
+          { style: { fontWeight: 500, fontSize: '14px' } },
+          taxonomy.name
+        ),
         React.createElement(
           'span',
           {
@@ -571,8 +586,8 @@ export class SectionDetail extends React.Component<SectionDetailProps> {
                 theme?.base === 'frost'
                   ? 'Child theme based on Frost WP'
                   : theme?.base === 'twentytwentyfive'
-                  ? 'Child theme based on Twenty Twenty-Five'
-                  : 'Custom theme with Figma design tokens'
+                    ? 'Child theme based on Twenty Twenty-Five'
+                    : 'Custom theme with Figma design tokens'
               )
             ),
             React.createElement(
@@ -642,7 +657,10 @@ export class SectionDetail extends React.Component<SectionDetailProps> {
 
   private renderPlugins(plugins: PluginRecommendation[]) {
     if (plugins.length === 0) {
-      return this.renderEmptyState('No plugins recommended', 'Plugins will be suggested based on your needs');
+      return this.renderEmptyState(
+        'No plugins recommended',
+        'Plugins will be suggested based on your needs'
+      );
     }
 
     return React.createElement(
@@ -684,7 +702,11 @@ export class SectionDetail extends React.Component<SectionDetailProps> {
               marginBottom: '4px',
             },
           },
-          React.createElement('span', { style: { fontWeight: 600, fontSize: '15px' } }, plugin.name),
+          React.createElement(
+            'span',
+            { style: { fontWeight: 600, fontSize: '15px' } },
+            plugin.name
+          ),
           plugin.required &&
             React.createElement(
               'span',

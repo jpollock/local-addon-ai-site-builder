@@ -48,7 +48,7 @@ export class RateLimiter {
     let channelRequests = this.requests.get(channel) || [];
 
     // Remove requests outside the current window
-    channelRequests = channelRequests.filter(req => req.timestamp > windowStart);
+    channelRequests = channelRequests.filter((req) => req.timestamp > windowStart);
 
     // Count total requests in the window
     const totalRequests = channelRequests.reduce((sum, req) => sum + req.count, 0);
@@ -89,7 +89,7 @@ export class RateLimiter {
     const windowStart = now - config.windowMs;
 
     const channelRequests = this.requests.get(channel) || [];
-    const activeRequests = channelRequests.filter(req => req.timestamp > windowStart);
+    const activeRequests = channelRequests.filter((req) => req.timestamp > windowStart);
     const totalRequests = activeRequests.reduce((sum, req) => sum + req.count, 0);
 
     return {
@@ -127,7 +127,7 @@ export class RateLimiter {
       }
 
       const windowStart = now - config.windowMs;
-      const activeRequests = requests.filter(req => req.timestamp > windowStart);
+      const activeRequests = requests.filter((req) => req.timestamp > windowStart);
 
       if (activeRequests.length === 0) {
         this.requests.delete(channel);
@@ -185,8 +185,11 @@ rateLimiter.configure('DISCONNECT_GOOGLE_OAUTH', 10, 60 * 1000); // 10 per minut
 rateLimiter.configure('DISCONNECT_FIGMA_OAUTH', 10, 60 * 1000); // 10 per minute
 
 // Cleanup old entries every 5 minutes
-setInterval(() => {
-  rateLimiter.cleanup();
-}, 5 * 60 * 1000);
+setInterval(
+  () => {
+    rateLimiter.cleanup();
+  },
+  5 * 60 * 1000
+);
 
 export { rateLimiter };

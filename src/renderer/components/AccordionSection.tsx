@@ -28,7 +28,7 @@ export class AccordionSection extends React.Component<Props, State> {
   }
 
   toggleExpanded = () => {
-    this.setState(prev => ({ isExpanded: !prev.isExpanded }));
+    this.setState((prev) => ({ isExpanded: !prev.isExpanded }));
   };
 
   render() {
@@ -123,54 +123,58 @@ export class AccordionSection extends React.Component<Props, State> {
               },
               title
             ),
-            count !== undefined && React.createElement(
-              'span',
+            count !== undefined &&
+              React.createElement(
+                'span',
+                {
+                  style: {
+                    backgroundColor: '#e8e8e8',
+                    color: '#666',
+                    padding: '2px 10px',
+                    borderRadius: '12px',
+                    fontSize: '13px',
+                    fontWeight: 500,
+                  },
+                },
+                count
+              )
+          ),
+          subtitle &&
+            React.createElement(
+              'p',
               {
                 style: {
-                  backgroundColor: '#e8e8e8',
-                  color: '#666',
-                  padding: '2px 10px',
-                  borderRadius: '12px',
+                  margin: '4px 0 0',
                   fontSize: '13px',
-                  fontWeight: 500,
+                  color: '#888',
                 },
               },
-              count
+              subtitle
             )
-          ),
-          subtitle && React.createElement(
-            'p',
-            {
-              style: {
-                margin: '4px 0 0',
-                fontSize: '13px',
-                color: '#888',
-              },
-            },
-            subtitle
-          )
         ),
 
         // Header action (e.g., "+ Add" button) - stop propagation to prevent toggle
-        headerAction && React.createElement(
-          'div',
-          {
-            onClick: (e: React.MouseEvent) => e.stopPropagation(),
-          },
-          headerAction
-        )
+        headerAction &&
+          React.createElement(
+            'div',
+            {
+              onClick: (e: React.MouseEvent) => e.stopPropagation(),
+            },
+            headerAction
+          )
       ),
 
       // Content
-      isExpanded && React.createElement(
-        'div',
-        {
-          style: {
-            padding: '20px',
+      isExpanded &&
+        React.createElement(
+          'div',
+          {
+            style: {
+              padding: '20px',
+            },
           },
-        },
-        children
-      )
+          children
+        )
     );
   }
 }

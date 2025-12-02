@@ -154,9 +154,7 @@ export class PerformanceMonitor {
     const status = data.success ? 'success' : 'failure';
     const durationStr = (data.duration / 1000).toFixed(1);
     const cacheStr = data.cacheHit ? ' (cache hit)' : '';
-    this.logger?.info?.(
-      `[PERFORMANCE] ${data.operation}: ${durationStr}s (${status})${cacheStr}`
-    );
+    this.logger?.info?.(`[PERFORMANCE] ${data.operation}: ${durationStr}s (${status})${cacheStr}`);
 
     // Check for high error rate
     const metrics = this.getMetrics();
@@ -172,9 +170,7 @@ export class PerformanceMonitor {
    */
   recordTimeout(operation: string, provider?: string): void {
     this.timeoutCount++;
-    this.logger?.warn?.(
-      `[PERFORMANCE] Timeout: ${operation}${provider ? ` (${provider})` : ''}`
-    );
+    this.logger?.warn?.(`[PERFORMANCE] Timeout: ${operation}${provider ? ` (${provider})` : ''}`);
   }
 
   /**
@@ -182,9 +178,7 @@ export class PerformanceMonitor {
    */
   recordCircuitBreakerTrip(breaker: string): void {
     this.circuitBreakerTrips++;
-    this.logger?.warn?.(
-      `[PERFORMANCE] Circuit breaker tripped: ${breaker}`
-    );
+    this.logger?.warn?.(`[PERFORMANCE] Circuit breaker tripped: ${breaker}`);
   }
 
   /**
@@ -202,9 +196,7 @@ export class PerformanceMonitor {
       (d) => d.duration > this.config.slowOperationThreshold
     ).length;
 
-    const cacheDataPoints = this.dataPoints.filter(
-      (d) => d.cacheHit !== undefined
-    );
+    const cacheDataPoints = this.dataPoints.filter((d) => d.cacheHit !== undefined);
     const cacheHits = cacheDataPoints.filter((d) => d.cacheHit).length;
     const cacheMisses = cacheDataPoints.filter((d) => !d.cacheHit).length;
 
@@ -224,10 +216,7 @@ export class PerformanceMonitor {
       slowOperations,
       cacheHits: cacheHits > 0 ? cacheHits : undefined,
       cacheMisses: cacheMisses > 0 ? cacheMisses : undefined,
-      cacheHitRate:
-        cacheDataPoints.length > 0
-          ? cacheHits / cacheDataPoints.length
-          : undefined,
+      cacheHitRate: cacheDataPoints.length > 0 ? cacheHits / cacheDataPoints.length : undefined,
     };
   }
 
@@ -239,9 +228,7 @@ export class PerformanceMonitor {
 
     // Group data points by operation
     for (const point of this.dataPoints) {
-      const key = point.provider
-        ? `${point.operation}:${point.provider}`
-        : point.operation;
+      const key = point.provider ? `${point.operation}:${point.provider}` : point.operation;
 
       if (!operationMap[key]) {
         operationMap[key] = [];
@@ -267,13 +254,9 @@ export class PerformanceMonitor {
         metrics,
         recentErrors,
         lastSuccess:
-          successPoints.length > 0
-            ? Math.max(...successPoints.map((p) => p.timestamp))
-            : undefined,
+          successPoints.length > 0 ? Math.max(...successPoints.map((p) => p.timestamp)) : undefined,
         lastFailure:
-          failurePoints.length > 0
-            ? Math.max(...failurePoints.map((p) => p.timestamp))
-            : undefined,
+          failurePoints.length > 0 ? Math.max(...failurePoints.map((p) => p.timestamp)) : undefined,
       };
     }
 
@@ -333,10 +316,7 @@ export class PerformanceMonitor {
     const cacheHits = cachePoints.filter((d) => d.cacheHit).length;
     const cacheMisses = cachePoints.filter((d) => !d.cacheHit).length;
 
-    const retryTotal = points.reduce(
-      (sum, p) => sum + (p.retryCount || 0),
-      0
-    );
+    const retryTotal = points.reduce((sum, p) => sum + (p.retryCount || 0), 0);
 
     return {
       totalRequests: points.length,
@@ -405,10 +385,7 @@ export class PerformanceMonitorRegistry {
     logger?: any
   ): PerformanceMonitor {
     if (!this.monitors.has(name)) {
-      this.monitors.set(
-        name,
-        new PerformanceMonitor({ ...config, name }, logger)
-      );
+      this.monitors.set(name, new PerformanceMonitor({ ...config, name }, logger));
     }
     return this.monitors.get(name)!;
   }

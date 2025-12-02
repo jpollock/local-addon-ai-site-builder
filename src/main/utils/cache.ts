@@ -110,10 +110,7 @@ export class Cache<T = any> {
     const expiresAt = now + (ttl ?? this.config.defaultTtl);
 
     // Check if we need to evict entries
-    if (
-      this.cache.size >= this.config.maxSize &&
-      !this.cache.has(key)
-    ) {
+    if (this.cache.size >= this.config.maxSize && !this.cache.has(key)) {
       this.evictLRU();
     }
 
@@ -147,9 +144,7 @@ export class Cache<T = any> {
   clear(): void {
     const size = this.cache.size;
     this.cache.clear();
-    this.logger?.info?.(
-      `[${this.config.name}] Cache cleared (${size} entries removed)`
-    );
+    this.logger?.info?.(`[${this.config.name}] Cache cleared (${size} entries removed)`);
   }
 
   /**
@@ -198,9 +193,7 @@ export class Cache<T = any> {
     }
 
     if (removed > 0) {
-      this.logger?.debug?.(
-        `[${this.config.name}] Cleanup removed ${removed} expired entries`
-      );
+      this.logger?.debug?.(`[${this.config.name}] Cleanup removed ${removed} expired entries`);
     }
   }
 
@@ -222,9 +215,7 @@ export class Cache<T = any> {
     if (oldestKey) {
       this.cache.delete(oldestKey);
       this.evictions++;
-      this.logger?.debug?.(
-        `[${this.config.name}] Evicted LRU entry: ${oldestKey}`
-      );
+      this.logger?.debug?.(`[${this.config.name}] Evicted LRU entry: ${oldestKey}`);
     }
   }
 
@@ -232,11 +223,7 @@ export class Cache<T = any> {
    * Get or compute a value
    * If key exists in cache, return it. Otherwise, compute value and cache it.
    */
-  async getOrCompute(
-    key: string,
-    compute: () => Promise<T>,
-    ttl?: number
-  ): Promise<T> {
+  async getOrCompute(key: string, compute: () => Promise<T>, ttl?: number): Promise<T> {
     const cached = this.get(key);
     if (cached !== undefined) {
       return cached;
@@ -257,11 +244,7 @@ export class CacheRegistry {
   /**
    * Get or create a cache
    */
-  getOrCreate<T = any>(
-    name: string,
-    config?: Partial<CacheConfig>,
-    logger?: any
-  ): Cache<T> {
+  getOrCreate<T = any>(name: string, config?: Partial<CacheConfig>, logger?: any): Cache<T> {
     if (!this.caches.has(name)) {
       this.caches.set(name, new Cache<T>({ ...config, name }, logger));
     }
