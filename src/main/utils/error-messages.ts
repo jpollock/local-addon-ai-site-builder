@@ -27,11 +27,11 @@ export interface UserFriendlyError {
   category: ErrorCategory;
   title: string;
   message: string;
-  action: string;      // What user should do
-  code?: string;       // Error code for debugging
-  technical?: string;  // Technical details (for logs)
+  action: string; // What user should do
+  code?: string; // Error code for debugging
+  technical?: string; // Technical details (for logs)
   recoverable?: boolean; // Can this error be recovered automatically?
-  retryable?: boolean;  // Should user retry this operation?
+  retryable?: boolean; // Should user retry this operation?
 }
 
 /**
@@ -110,7 +110,8 @@ function formatNetworkError(error: unknown, message: string): UserFriendlyError 
     category: ErrorCategory.NETWORK,
     title: 'Connection Failed',
     message: 'Unable to connect to the API. Please check your internet connection.',
-    action: 'Verify your internet connection and try again. If you\'re behind a firewall or proxy, check your network settings.',
+    action:
+      "Verify your internet connection and try again. If you're behind a firewall or proxy, check your network settings.",
     technical: message,
     recoverable: true,
     retryable: true,
@@ -129,7 +130,8 @@ function formatAuthError(error: unknown, message: string, context?: string): Use
       category: ErrorCategory.AUTH,
       title: 'Invalid API Key',
       message: `Your API key${contextHint} appears to be invalid or expired.`,
-      action: 'Please check your API key in Settings and ensure it\'s correct. You can get a new key from your provider\'s dashboard.',
+      action:
+        "Please check your API key in Settings and ensure it's correct. You can get a new key from your provider's dashboard.",
       technical: message,
       recoverable: false,
       retryable: false,
@@ -176,7 +178,7 @@ function formatRateLimitError(error: unknown, message: string): UserFriendlyErro
   return {
     category: ErrorCategory.RATE_LIMIT,
     title: 'Rate Limit Exceeded',
-    message: 'You\'ve made too many requests in a short time.',
+    message: "You've made too many requests in a short time.",
     action: `${retryMessage} Consider upgrading your plan for higher limits.`,
     technical: message,
     recoverable: true,
@@ -219,7 +221,8 @@ function formatOAuthError(error: unknown, message: string): UserFriendlyError {
     category: ErrorCategory.OAUTH,
     title: 'Authentication Failed',
     message: 'Unable to complete the sign-in process.',
-    action: 'Please try signing in again. If the problem persists, try using a different authentication method.',
+    action:
+      'Please try signing in again. If the problem persists, try using a different authentication method.',
     technical: message,
     recoverable: false,
     retryable: true,
@@ -299,7 +302,7 @@ function formatAPIError(error: unknown, message: string, statusCode: number): Us
     return {
       category: ErrorCategory.API_ERROR,
       title: 'Access Denied',
-      message: 'You don\'t have permission to access this resource.',
+      message: "You don't have permission to access this resource.",
       action: 'Check your API key permissions or contact support.',
       code: '403',
       technical: message,
@@ -373,8 +376,15 @@ function getStatusCode(error: unknown): number | undefined {
  * Helper: Check if error is network-related
  */
 function isNetworkError(error: unknown, message: string): boolean {
-  const networkKeywords = ['ECONNREFUSED', 'ENOTFOUND', 'ETIMEDOUT', 'network', 'fetch failed', 'connection'];
-  return networkKeywords.some(keyword => message.toLowerCase().includes(keyword.toLowerCase()));
+  const networkKeywords = [
+    'ECONNREFUSED',
+    'ENOTFOUND',
+    'ETIMEDOUT',
+    'network',
+    'fetch failed',
+    'connection',
+  ];
+  return networkKeywords.some((keyword) => message.toLowerCase().includes(keyword.toLowerCase()));
 }
 
 /**
@@ -382,8 +392,14 @@ function isNetworkError(error: unknown, message: string): boolean {
  */
 function isAuthError(error: unknown, message: string, statusCode?: number): boolean {
   if (statusCode === 401) return true;
-  const authKeywords = ['unauthorized', 'invalid api key', 'authentication', 'invalid key', 'api key'];
-  return authKeywords.some(keyword => message.toLowerCase().includes(keyword.toLowerCase()));
+  const authKeywords = [
+    'unauthorized',
+    'invalid api key',
+    'authentication',
+    'invalid key',
+    'api key',
+  ];
+  return authKeywords.some((keyword) => message.toLowerCase().includes(keyword.toLowerCase()));
 }
 
 /**
@@ -391,7 +407,7 @@ function isAuthError(error: unknown, message: string, statusCode?: number): bool
  */
 function isTimeoutError(error: unknown, message: string): boolean {
   const timeoutKeywords = ['timeout', 'timed out', 'ETIMEDOUT'];
-  return timeoutKeywords.some(keyword => message.toLowerCase().includes(keyword.toLowerCase()));
+  return timeoutKeywords.some((keyword) => message.toLowerCase().includes(keyword.toLowerCase()));
 }
 
 /**
@@ -400,7 +416,7 @@ function isTimeoutError(error: unknown, message: string): boolean {
 function isRateLimitError(error: unknown, message: string, statusCode?: number): boolean {
   if (statusCode === 429) return true;
   const rateLimitKeywords = ['rate limit', 'too many requests', 'quota exceeded'];
-  return rateLimitKeywords.some(keyword => message.toLowerCase().includes(keyword.toLowerCase()));
+  return rateLimitKeywords.some((keyword) => message.toLowerCase().includes(keyword.toLowerCase()));
 }
 
 /**
@@ -408,7 +424,9 @@ function isRateLimitError(error: unknown, message: string, statusCode?: number):
  */
 function isValidationError(error: unknown, message: string): boolean {
   const validationKeywords = ['validation', 'invalid', 'required', 'must be', 'should be'];
-  return validationKeywords.some(keyword => message.toLowerCase().includes(keyword.toLowerCase()));
+  return validationKeywords.some((keyword) =>
+    message.toLowerCase().includes(keyword.toLowerCase())
+  );
 }
 
 /**
@@ -416,7 +434,7 @@ function isValidationError(error: unknown, message: string): boolean {
  */
 function isOAuthError(error: unknown, message: string): boolean {
   const oauthKeywords = ['oauth', 'token', 'expired', 'refresh', 'authorization'];
-  return oauthKeywords.some(keyword => message.toLowerCase().includes(keyword.toLowerCase()));
+  return oauthKeywords.some((keyword) => message.toLowerCase().includes(keyword.toLowerCase()));
 }
 
 /**
@@ -424,7 +442,7 @@ function isOAuthError(error: unknown, message: string): boolean {
  */
 function isFileSystemError(error: unknown, message: string): boolean {
   const fsKeywords = ['ENOENT', 'EACCES', 'EPERM', 'EEXIST', 'file', 'directory', 'permission'];
-  return fsKeywords.some(keyword => message.includes(keyword));
+  return fsKeywords.some((keyword) => message.includes(keyword));
 }
 
 /**
@@ -525,7 +543,8 @@ export const ErrorMessages = {
     category: ErrorCategory.VALIDATION,
     title: 'Invalid Figma URL',
     message: 'The Figma URL provided is not valid.',
-    action: 'Please enter a valid Figma file URL (e.g., figma.com/file/KEY or figma.com/design/KEY).',
+    action:
+      'Please enter a valid Figma file URL (e.g., figma.com/file/KEY or figma.com/design/KEY).',
     recoverable: false,
     retryable: false,
   } as UserFriendlyError,
@@ -534,7 +553,8 @@ export const ErrorMessages = {
     category: ErrorCategory.AUTH,
     title: 'Cannot Access Figma File',
     message: 'Unable to access the Figma file with your current credentials.',
-    action: 'Make sure the file exists and your token has access to it. You may need to request access from the file owner.',
+    action:
+      'Make sure the file exists and your token has access to it. You may need to request access from the file owner.',
     recoverable: false,
     retryable: false,
   } as UserFriendlyError,

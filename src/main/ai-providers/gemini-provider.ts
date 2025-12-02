@@ -284,7 +284,9 @@ export class GeminiProvider extends BaseAIProvider {
                   throw new Error('Last message must be from user');
                 }
 
-                console.log(`[GeminiProvider] Sending message (${lastMessage.content.length} chars)`);
+                console.log(
+                  `[GeminiProvider] Sending message (${lastMessage.content.length} chars)`
+                );
 
                 // Send message and get response
                 const apiResult = await chat.sendMessage(lastMessage.content);
@@ -298,7 +300,10 @@ export class GeminiProvider extends BaseAIProvider {
                     `[GeminiProvider] Empty response! Candidates:`,
                     JSON.stringify(response.candidates)
                   );
-                  console.log(`[GeminiProvider] Prompt feedback:`, JSON.stringify(response.promptFeedback));
+                  console.log(
+                    `[GeminiProvider] Prompt feedback:`,
+                    JSON.stringify(response.promptFeedback)
+                  );
                 }
 
                 return text;

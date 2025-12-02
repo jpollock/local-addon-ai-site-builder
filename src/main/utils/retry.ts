@@ -92,11 +92,7 @@ export function isRetryableError(error: any, config: RetryConfig): boolean {
 /**
  * Calculate delay for next retry with exponential backoff and jitter
  */
-function calculateDelay(
-  attempt: number,
-  config: RetryConfig,
-  retryAfterHeader?: number
-): number {
+function calculateDelay(attempt: number, config: RetryConfig, retryAfterHeader?: number): number {
   // If we have a Retry-After header (e.g., from 429 response), use it
   if (retryAfterHeader && retryAfterHeader > 0) {
     // Cap at max delay for UX
@@ -104,8 +100,7 @@ function calculateDelay(
   }
 
   // Exponential backoff: initialDelay * (backoffMultiplier ^ attempt)
-  const exponentialDelay =
-    config.initialDelay * Math.pow(config.backoffMultiplier, attempt);
+  const exponentialDelay = config.initialDelay * Math.pow(config.backoffMultiplier, attempt);
 
   // Cap at max delay
   const cappedDelay = Math.min(exponentialDelay, config.maxDelay);
@@ -169,8 +164,7 @@ export async function withRetry<T>(
 
       // Check if we should retry
       const shouldRetry =
-        attempt < mergedConfig.maxAttempts &&
-        isRetryableError(error, mergedConfig);
+        attempt < mergedConfig.maxAttempts && isRetryableError(error, mergedConfig);
 
       if (!shouldRetry) {
         if (logger?.error) {
@@ -199,10 +193,7 @@ export async function withRetry<T>(
 
   // All attempts exhausted
   if (logger?.error) {
-    logger.error(
-      `[Retry] All ${mergedConfig.maxAttempts} attempts exhausted`,
-      lastError
-    );
+    logger.error(`[Retry] All ${mergedConfig.maxAttempts} attempts exhausted`, lastError);
   }
 
   throw new RetryExhaustedError(
@@ -216,8 +207,5 @@ export async function withRetry<T>(
  * Check if an error is a retry exhausted error
  */
 export function isRetryExhaustedError(error: unknown): boolean {
-  return (
-    error instanceof RetryExhaustedError ||
-    (error as any)?.name === 'RetryExhaustedError'
-  );
+  return error instanceof RetryExhaustedError || (error as any)?.name === 'RetryExhaustedError';
 }

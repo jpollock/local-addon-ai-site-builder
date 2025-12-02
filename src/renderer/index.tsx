@@ -104,7 +104,9 @@ export default function (context: LocalRenderer.AddonRendererContext): void {
 
       console.log('[AI Site Builder] Returning custom steps:');
       customSteps.forEach((step, i) => {
-        console.log(`[AI Site Builder]   Step ${i}: key="${step.key}", path="${step.path}", name="${step.name}"`);
+        console.log(
+          `[AI Site Builder]   Step ${i}: key="${step.key}", path="${step.path}", name="${step.name}"`
+        );
       });
       console.log('[AI Site Builder] =========================================');
       return customSteps;
@@ -125,23 +127,23 @@ export default function (context: LocalRenderer.AddonRendererContext): void {
       {
         path: '/ai-site-builder',
         displayName: '🤖 AI Site Builder',
-        sections: (props: any) => React.createElement(PreferencesPanel, {
-          context,
-          setApplyButtonDisabled: props?.setApplyButtonDisabled,
-          onSettingsChange: (settings: any) => {
-            pendingSettings = settings;
-          }
-        }),
+        sections: (props: any) =>
+          React.createElement(PreferencesPanel, {
+            context,
+            setApplyButtonDisabled: props?.setApplyButtonDisabled,
+            onSettingsChange: (settings: any) => {
+              pendingSettings = settings;
+            },
+          }),
         onApply: async () => {
           if (!pendingSettings) return;
 
           const electron = context.electron || (window as any).electron;
           if (electron) {
             try {
-              const response = await electron.ipcRenderer.invoke(
-                IPC_CHANNELS.UPDATE_SETTINGS,
-                { settings: pendingSettings }
-              );
+              const response = await electron.ipcRenderer.invoke(IPC_CHANNELS.UPDATE_SETTINGS, {
+                settings: pendingSettings,
+              });
 
               if (response.success) {
                 console.log('[AI Site Builder] Settings saved successfully');
@@ -153,8 +155,8 @@ export default function (context: LocalRenderer.AddonRendererContext): void {
               console.error('[AI Site Builder] Error saving settings:', error);
             }
           }
-        }
-      }
+        },
+      },
     ];
   });
 

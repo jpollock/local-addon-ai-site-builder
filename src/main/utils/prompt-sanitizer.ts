@@ -90,11 +90,7 @@ export function sanitizeUserInput(
     wrapWithBoundaries?: boolean;
   } = {}
 ): SanitizationResult {
-  const {
-    maxLength = 10000,
-    stripMarkdown = false,
-    wrapWithBoundaries = false,
-  } = options;
+  const { maxLength = 10000, stripMarkdown = false, wrapWithBoundaries = false } = options;
 
   const originalLength = input.length;
   let sanitized = input;
@@ -154,10 +150,7 @@ export function sanitizeUserInput(
 /**
  * Create a safe system prompt with clear boundaries for user content
  */
-export function createSafeSystemPrompt(
-  basePrompt: string,
-  userContext?: string
-): string {
+export function createSafeSystemPrompt(basePrompt: string, userContext?: string): string {
   let prompt = basePrompt;
 
   // Add injection defense instructions
@@ -174,7 +167,8 @@ export function createSafeSystemPrompt(
   // Insert defense instructions after the first section
   const insertPoint = prompt.indexOf('\n\n');
   if (insertPoint > 0) {
-    prompt = prompt.slice(0, insertPoint) + '\n\n' + defenseInstructions + prompt.slice(insertPoint);
+    prompt =
+      prompt.slice(0, insertPoint) + '\n\n' + defenseInstructions + prompt.slice(insertPoint);
   } else {
     prompt = defenseInstructions + prompt;
   }
@@ -263,7 +257,8 @@ export function validateWpCliCommand(command: string[]): {
   const subCommand = command[1]?.toLowerCase();
 
   // Check if the command is in our allowlist
-  const allowedSubCommands = WORDPRESS_ALLOWED_OPERATIONS[mainCommand as keyof typeof WORDPRESS_ALLOWED_OPERATIONS];
+  const allowedSubCommands =
+    WORDPRESS_ALLOWED_OPERATIONS[mainCommand as keyof typeof WORDPRESS_ALLOWED_OPERATIONS];
 
   if (!allowedSubCommands) {
     return { valid: false, reason: `Command type not allowed: ${mainCommand}` };
@@ -289,8 +284,8 @@ export function validateAIResponseStructure(
   }
 
   const responseKeys = Object.keys(response);
-  const missing = expectedFields.filter(field => !responseKeys.includes(field));
-  const extra = responseKeys.filter(key => !expectedFields.includes(key));
+  const missing = expectedFields.filter((field) => !responseKeys.includes(field));
+  const extra = responseKeys.filter((key) => !expectedFields.includes(key));
 
   return {
     valid: missing.length === 0,

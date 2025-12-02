@@ -31,11 +31,7 @@ export async function withTimeout<T>(
 
   const timeoutPromise = new Promise<never>((_, reject) => {
     timeoutHandle = setTimeout(() => {
-      reject(
-        new TimeoutError(
-          errorMessage || `Operation timed out after ${timeoutMs}ms`
-        )
-      );
+      reject(new TimeoutError(errorMessage || `Operation timed out after ${timeoutMs}ms`));
     }, timeoutMs);
   });
 

@@ -156,19 +156,16 @@ export class SectionNav extends React.Component<SectionNavProps> {
 
       // Issue indicator (if applicable)
       section.hasIssues &&
-        React.createElement(
-          'span',
-          {
-            style: {
-              width: '8px',
-              height: '8px',
-              backgroundColor: '#d32f2f',
-              borderRadius: '50%',
-              marginLeft: '8px',
-            },
-            title: 'Has issues',
-          }
-        )
+        React.createElement('span', {
+          style: {
+            width: '8px',
+            height: '8px',
+            backgroundColor: '#d32f2f',
+            borderRadius: '50%',
+            marginLeft: '8px',
+          },
+          title: 'Has issues',
+        })
     );
   }
 }

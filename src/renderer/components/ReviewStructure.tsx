@@ -56,10 +56,9 @@ export class ReviewStructure extends React.Component<Props, State> {
 
       const electron = getElectron();
 
-      const response = await electron.ipcRenderer.invoke(
-        IPC_CHANNELS.GET_PROJECT,
-        { projectId: siteSettings.projectId }
-      );
+      const response = await electron.ipcRenderer.invoke(IPC_CHANNELS.GET_PROJECT, {
+        projectId: siteSettings.projectId,
+      });
 
       if (!response.success || !response.project.structure) {
         throw new Error('No structure found for this project');
@@ -82,7 +81,8 @@ export class ReviewStructure extends React.Component<Props, State> {
     try {
       this.setState({ isCreatingSite: true, error: null });
 
-      const siteName = this.props.siteSettings.projectName ||
+      const siteName =
+        this.props.siteSettings.projectName ||
         this.props.siteSettings.wizardAnswers?.siteName ||
         `ai-site-${Date.now()}`;
 
@@ -106,21 +106,18 @@ export class ReviewStructure extends React.Component<Props, State> {
         ? JSON.parse(JSON.stringify(this.props.siteSettings.figmaAnalysis))
         : undefined;
 
-      const response = await electron.ipcRenderer.invoke(
-        IPC_CHANNELS.CREATE_SITE,
-        {
-          projectId: this.props.siteSettings.projectId,
-          siteName,
-          siteDomain,
-          structure: plainStructure,
-          figmaAnalysis, // Pass Figma analysis for page/pattern generation
-          environment: {
-            php: '8.2.0',
-            webServer: 'nginx',
-            database: '8.0.16',
-          },
-        }
-      );
+      const response = await electron.ipcRenderer.invoke(IPC_CHANNELS.CREATE_SITE, {
+        projectId: this.props.siteSettings.projectId,
+        siteName,
+        siteDomain,
+        structure: plainStructure,
+        figmaAnalysis, // Pass Figma analysis for page/pattern generation
+        environment: {
+          php: '8.2.0',
+          webServer: 'nginx',
+          database: '8.0.16',
+        },
+      });
 
       if (!response.success) {
         throw new Error(response.error || 'Failed to create site');
@@ -174,7 +171,8 @@ export class ReviewStructure extends React.Component<Props, State> {
 
   render() {
     const { structure, isCreatingSite, error, selectedSection } = this.state;
-    const siteName = this.props.siteSettings?.wizardAnswers?.siteName ||
+    const siteName =
+      this.props.siteSettings?.wizardAnswers?.siteName ||
       this.props.siteSettings?.projectName ||
       'Your Site';
     const siteDomain = `${siteName.toLowerCase().replace(/\s+/g, '-')}.local`;
@@ -248,9 +246,9 @@ export class ReviewStructure extends React.Component<Props, State> {
     const pages = this.extractPages(structure);
 
     // Extract unique taxonomies from all post types
-    const allTaxonomies = postTypes.flatMap(pt => pt.taxonomies || []);
-    const uniqueTaxonomies = allTaxonomies.filter((tax, index, self) =>
-      index === self.findIndex(t => t.slug === tax.slug)
+    const allTaxonomies = postTypes.flatMap((pt) => pt.taxonomies || []);
+    const uniqueTaxonomies = allTaxonomies.filter(
+      (tax, index, self) => index === self.findIndex((t) => t.slug === tax.slug)
     );
 
     return [
@@ -305,21 +303,23 @@ export class ReviewStructure extends React.Component<Props, State> {
           height: '100%',
         },
       },
-      error ? React.createElement(
-        'div',
-        { style: { textAlign: 'center', color: '#f44336' } },
-        React.createElement('h2', null, 'Error Loading Structure'),
-        React.createElement('p', null, error),
-        React.createElement(
-          'button',
-          {
-            onClick: this.handleGoBack,
-            className: 'Button Button--primary',
-            style: { marginTop: '16px' },
-          },
-          'Go Back'
-        )
-      ) : React.createElement('div', null, 'Loading structure...')
+      error
+        ? React.createElement(
+            'div',
+            { style: { textAlign: 'center', color: '#f44336' } },
+            React.createElement('h2', null, 'Error Loading Structure'),
+            React.createElement('p', null, error),
+            React.createElement(
+              'button',
+              {
+                onClick: this.handleGoBack,
+                className: 'Button Button--primary',
+                style: { marginTop: '16px' },
+              },
+              'Go Back'
+            )
+          )
+        : React.createElement('div', null, 'Loading structure...')
     );
   }
 
@@ -500,7 +500,7 @@ export class ReviewStructure extends React.Component<Props, State> {
   private extractPages(structure: SiteStructure): { title: string; slug: string }[] {
     // First check if structure has pages directly
     if (structure.content.pages && structure.content.pages.length > 0) {
-      return structure.content.pages.map(p => ({ title: p.title, slug: p.slug }));
+      return structure.content.pages.map((p) => ({ title: p.title, slug: p.slug }));
     }
 
     // Fall back to wizard answers
@@ -510,12 +510,12 @@ export class ReviewStructure extends React.Component<Props, State> {
     // Convert wizard page selections to page objects
     wizardPages.forEach((pageValue: string) => {
       const pageMap: Record<string, { title: string; slug: string }> = {
-        'about': { title: 'About', slug: 'about' },
-        'contact': { title: 'Contact', slug: 'contact' },
+        about: { title: 'About', slug: 'about' },
+        contact: { title: 'Contact', slug: 'contact' },
         'privacy-policy': { title: 'Privacy Policy', slug: 'privacy-policy' },
-        'faq': { title: 'FAQ', slug: 'faq' },
+        faq: { title: 'FAQ', slug: 'faq' },
         'terms-of-service': { title: 'Terms of Service', slug: 'terms-of-service' },
-        'blog': { title: 'Blog', slug: 'blog' },
+        blog: { title: 'Blog', slug: 'blog' },
       };
 
       if (pageMap[pageValue]) {
@@ -523,7 +523,7 @@ export class ReviewStructure extends React.Component<Props, State> {
       } else {
         // Handle custom pages
         pages.push({
-          title: pageValue.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+          title: pageValue.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase()),
           slug: pageValue,
         });
       }

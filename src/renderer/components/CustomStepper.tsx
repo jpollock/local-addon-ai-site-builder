@@ -14,9 +14,9 @@ import { STEPS, ROUTES } from '../../common/constants';
 // The UI stepper shows 4 steps regardless of which sub-mode is active
 const STEP_CONFIG = [
   { key: STEPS.ENTRY, path: ROUTES.ENTRY, name: 'Get Started', number: 1 },
-  { key: STEPS.FIGMA_CONNECT, path: ROUTES.FIGMA_CONNECT, name: 'Get Started', number: 1 },  // Figma connect (same step as entry)
-  { key: STEPS.QUESTIONS, path: ROUTES.QUESTIONS, name: 'Conversation', number: 2 },  // Questions mode (default)
-  { key: STEPS.CONVERSATION, path: ROUTES.CONVERSATION, name: 'Conversation', number: 2 },  // Chat mode (advanced)
+  { key: STEPS.FIGMA_CONNECT, path: ROUTES.FIGMA_CONNECT, name: 'Get Started', number: 1 }, // Figma connect (same step as entry)
+  { key: STEPS.QUESTIONS, path: ROUTES.QUESTIONS, name: 'Conversation', number: 2 }, // Questions mode (default)
+  { key: STEPS.CONVERSATION, path: ROUTES.CONVERSATION, name: 'Conversation', number: 2 }, // Chat mode (advanced)
   { key: STEPS.REVIEW_STRUCTURE, path: ROUTES.REVIEW_STRUCTURE, name: 'Review', number: 3 },
   { key: STEPS.BUILDING, path: ROUTES.BUILDING, name: 'Building', number: 4 },
 ];
@@ -201,11 +201,7 @@ class StepItem extends React.Component<StepItemProps> {
       'div',
       { style: stepContainerStyle },
       // Circle with number or checkmark
-      React.createElement(
-        'div',
-        { style: circleStyle },
-        isDone ? checkmark : number
-      ),
+      React.createElement('div', { style: circleStyle }, isDone ? checkmark : number),
       // Step label
       React.createElement('span', { style: labelStyle }, name),
       // Connector line (except for last step)

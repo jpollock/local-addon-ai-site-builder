@@ -199,7 +199,11 @@ export class ProjectManager {
   getConversation(conversationId: string): Conversation | null {
     try {
       // Validate ID and get safe path to prevent path traversal
-      const conversationPath = this.getSafePath(conversationId, this.conversationsDir, 'conversation');
+      const conversationPath = this.getSafePath(
+        conversationId,
+        this.conversationsDir,
+        'conversation'
+      );
 
       if (fs.existsSync(conversationPath)) {
         const data = fs.readFileSync(conversationPath, 'utf-8');
@@ -219,7 +223,11 @@ export class ProjectManager {
   createConversation(conversation: Conversation): void {
     try {
       // Validate ID and get safe path to prevent path traversal
-      const conversationPath = this.getSafePath(conversation.id, this.conversationsDir, 'conversation');
+      const conversationPath = this.getSafePath(
+        conversation.id,
+        this.conversationsDir,
+        'conversation'
+      );
       const data = JSON.stringify(conversation, null, 2);
       fs.writeFileSync(conversationPath, data, 'utf-8');
     } catch (error) {
@@ -234,7 +242,11 @@ export class ProjectManager {
   updateConversation(conversationId: string, updates: Partial<Conversation>): void {
     try {
       // Validate ID and get safe path to prevent path traversal
-      const conversationPath = this.getSafePath(conversationId, this.conversationsDir, 'conversation');
+      const conversationPath = this.getSafePath(
+        conversationId,
+        this.conversationsDir,
+        'conversation'
+      );
       const conversation = this.getConversation(conversationId);
 
       if (!conversation) {
@@ -256,7 +268,11 @@ export class ProjectManager {
   deleteConversation(conversationId: string): void {
     try {
       // Validate ID and get safe path to prevent path traversal
-      const conversationPath = this.getSafePath(conversationId, this.conversationsDir, 'conversation');
+      const conversationPath = this.getSafePath(
+        conversationId,
+        this.conversationsDir,
+        'conversation'
+      );
 
       if (fs.existsSync(conversationPath)) {
         fs.unlinkSync(conversationPath);

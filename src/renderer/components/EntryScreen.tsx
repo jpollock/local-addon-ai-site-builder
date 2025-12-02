@@ -48,10 +48,13 @@ export class EntryScreen extends React.Component<Props, State> {
       const electron = getElectron();
       const response = await electron.ipcRenderer.invoke(IPC_CHANNELS.GET_PROVIDERS);
 
-      const hasConfigured = response.success &&
-        response.providers.some((p: { hasApiKey: boolean }) => p.hasApiKey);
+      const hasConfigured =
+        response.success && response.providers.some((p: { hasApiKey: boolean }) => p.hasApiKey);
 
-      console.log('[EntryScreen] Provider status:', { hasConfigured, providers: response.providers });
+      console.log('[EntryScreen] Provider status:', {
+        hasConfigured,
+        providers: response.providers,
+      });
 
       this.setState({
         hasProvider: hasConfigured,
@@ -103,15 +106,11 @@ export class EntryScreen extends React.Component<Props, State> {
           height: '100%',
           padding: '80px 40px',
           textAlign: 'center',
-        }
+        },
       },
 
       // Icon
-      React.createElement(
-        'div',
-        { style: { fontSize: '64px', marginBottom: '24px' } },
-        '🔑'
-      ),
+      React.createElement('div', { style: { fontSize: '64px', marginBottom: '24px' } }, '🔑'),
 
       // Headline
       React.createElement(
@@ -122,7 +121,7 @@ export class EntryScreen extends React.Component<Props, State> {
             fontWeight: 600,
             color: '#333',
             marginBottom: '12px',
-          }
+          },
         },
         'Configure an AI Provider to Get Started'
       ),
@@ -137,7 +136,7 @@ export class EntryScreen extends React.Component<Props, State> {
             marginBottom: '24px',
             maxWidth: '450px',
             lineHeight: '1.6',
-          }
+          },
         },
         'AI Site Builder uses AI to help you create WordPress sites. Configure an AI provider to enable AI-powered site generation.'
       ),
@@ -153,7 +152,7 @@ export class EntryScreen extends React.Component<Props, State> {
             padding: '20px 24px',
             marginBottom: '24px',
             maxWidth: '400px',
-          }
+          },
         },
         React.createElement(
           'p',
@@ -163,7 +162,7 @@ export class EntryScreen extends React.Component<Props, State> {
               fontWeight: 600,
               color: '#333',
               marginBottom: '8px',
-            }
+            },
           },
           'To configure your AI provider:'
         ),
@@ -175,7 +174,7 @@ export class EntryScreen extends React.Component<Props, State> {
               color: '#666',
               margin: 0,
               fontFamily: 'monospace',
-            }
+            },
           },
           'Local → Preferences → AI Site Builder'
         )
@@ -190,9 +189,9 @@ export class EntryScreen extends React.Component<Props, State> {
             color: '#999',
             maxWidth: '420px',
             lineHeight: '1.5',
-          }
+          },
         },
-        'You\'ll need an API key from your chosen provider. Get one from console.anthropic.com (Claude), platform.openai.com (OpenAI), or aistudio.google.com (Gemini).'
+        "You'll need an API key from your chosen provider. Get one from console.anthropic.com (Claude), platform.openai.com (OpenAI), or aistudio.google.com (Gemini)."
       )
     );
   }
@@ -207,13 +206,9 @@ export class EntryScreen extends React.Component<Props, State> {
           alignItems: 'center',
           justifyContent: 'center',
           height: '100%',
-        }
+        },
       },
-      React.createElement(
-        'div',
-        { style: { color: '#666', fontSize: '15px' } },
-        'Loading...'
-      )
+      React.createElement('div', { style: { color: '#666', fontSize: '15px' } }, 'Loading...')
     );
   }
 
@@ -239,7 +234,7 @@ export class EntryScreen extends React.Component<Props, State> {
           flexDirection: 'column',
           height: '100%',
           overflow: 'auto',
-        }
+        },
       },
 
       // Main content
@@ -255,7 +250,7 @@ export class EntryScreen extends React.Component<Props, State> {
             maxWidth: '900px',
             margin: '0 auto',
             width: '100%',
-          }
+          },
         },
 
         // Title
@@ -268,7 +263,7 @@ export class EntryScreen extends React.Component<Props, State> {
               marginBottom: '12px',
               textAlign: 'center',
               color: '#1a1a1a',
-            }
+            },
           },
           'Create your WordPress site'
         ),
@@ -282,9 +277,9 @@ export class EntryScreen extends React.Component<Props, State> {
               fontSize: '16px',
               marginBottom: '40px',
               textAlign: 'center',
-            }
+            },
           },
-          'Describe what you\'re building and we\'ll help you create it'
+          "Describe what you're building and we'll help you create it"
         ),
 
         // Main textarea container with button inside
@@ -299,7 +294,7 @@ export class EntryScreen extends React.Component<Props, State> {
               padding: '20px',
               marginBottom: '24px',
               backgroundColor: '#fff',
-            }
+            },
           },
 
           // Textarea
@@ -307,7 +302,8 @@ export class EntryScreen extends React.Component<Props, State> {
             ref: this.textareaRef,
             value: descriptionText,
             onChange: this.handleDescriptionChange,
-            placeholder: 'Describe what you\'re building... (e.g., \'A recipe sharing website with user-submitted content\')',
+            placeholder:
+              "Describe what you're building... (e.g., 'A recipe sharing website with user-submitted content')",
             style: {
               width: '100%',
               minHeight: '80px',
@@ -338,7 +334,7 @@ export class EntryScreen extends React.Component<Props, State> {
                 alignItems: 'center',
                 gap: '16px',
                 marginTop: '16px',
-              }
+              },
             },
 
             // Keyboard hint
@@ -348,7 +344,7 @@ export class EntryScreen extends React.Component<Props, State> {
                 style: {
                   fontSize: '13px',
                   color: '#999',
-                }
+                },
               },
               '⌘ + Enter to submit'
             ),

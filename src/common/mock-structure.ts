@@ -461,7 +461,7 @@ export function createStructureFromAnswers(
   const pages: { title: string; slug: string; template?: string; content?: string }[] = [];
   if (requiredPages.length > 0) {
     const menuItems = requiredPages.map((page, index) => {
-      const title = page.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+      const title = page.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
       const slug = page.toLowerCase().replace(/\s+/g, '-');
 
       // Add to pages array
@@ -480,10 +480,7 @@ export function createStructureFromAnswers(
     menus.push({
       name: 'Primary Navigation',
       location: 'primary',
-      items: [
-        { title: 'Home', url: '/', order: 0 },
-        ...menuItems,
-      ],
+      items: [{ title: 'Home', url: '/', order: 0 }, ...menuItems],
     });
   }
 
@@ -499,7 +496,7 @@ export function createStructureFromAnswers(
             if (!pluginSlugs.has(pluginSlug)) {
               plugins.push({
                 slug: pluginSlug,
-                name: pluginSlug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+                name: pluginSlug.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase()),
                 reason: `AI suggestion based on: ${opt.label}`,
                 required: false,
                 confidence: opt.confidence ? Math.round(opt.confidence * 100) : 80,
@@ -511,16 +508,14 @@ export function createStructureFromAnswers(
 
         // Add AI-suggested pages to menu
         if (mapping.pages) {
-          const existingMenuUrls = new Set(
-            menus.flatMap(m => m.items?.map(i => i.url) || [])
-          );
-          const primaryMenu = menus.find(m => m.location === 'primary');
+          const existingMenuUrls = new Set(menus.flatMap((m) => m.items?.map((i) => i.url) || []));
+          const primaryMenu = menus.find((m) => m.location === 'primary');
 
           for (const pageslug of mapping.pages) {
             const pageUrl = `/${pageslug}`;
             if (!existingMenuUrls.has(pageUrl) && primaryMenu?.items) {
               primaryMenu.items.push({
-                title: pageslug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+                title: pageslug.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase()),
                 url: pageUrl,
               });
               existingMenuUrls.add(pageUrl);
@@ -542,7 +537,10 @@ export function createStructureFromAnswers(
 
   // Add AI-recommended plugins from wizard flow
   if (recommendedPlugins && recommendedPlugins.length > 0) {
-    console.log('[createStructureFromAnswers] Processing AI-recommended plugins:', recommendedPlugins);
+    console.log(
+      '[createStructureFromAnswers] Processing AI-recommended plugins:',
+      recommendedPlugins
+    );
     for (const plugin of recommendedPlugins) {
       if (!pluginSlugs.has(plugin.slug)) {
         plugins.push({
@@ -558,9 +556,10 @@ export function createStructureFromAnswers(
   }
 
   // Add ACF only if we have post types with custom fields
-  const hasCustomFields = postTypes.some(pt => pt.fields && pt.fields.length > 0);
+  const hasCustomFields = postTypes.some((pt) => pt.fields && pt.fields.length > 0);
   if (hasCustomFields && !pluginSlugs.has('advanced-custom-fields')) {
-    plugins.unshift({ // Add at beginning since it's foundational
+    plugins.unshift({
+      // Add at beginning since it's foundational
       slug: 'advanced-custom-fields',
       name: 'Advanced Custom Fields',
       reason: 'Required for custom content fields on your post types',
