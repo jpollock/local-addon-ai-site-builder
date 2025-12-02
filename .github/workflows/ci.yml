@@ -9,6 +9,7 @@ on:
     branches:
       - main
       - sculptor/**
+  workflow_call:
 
 jobs:
   lint:
