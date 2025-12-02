@@ -5,7 +5,11 @@
  * Target: 80%+ code coverage
  */
 
-import { GoogleOAuthService, GoogleOAuthTokens } from '../../src/main/google-oauth';
+import {
+  GoogleOAuthService,
+  GoogleOAuthTokens,
+  getGoogleOAuthService,
+} from '../../src/main/google-oauth';
 import { TEST_GOOGLE_OAUTH_TOKENS, createExpiredGoogleTokens } from '../helpers/test-fixtures';
 import * as http from 'http';
 
@@ -196,5 +200,80 @@ describe('GoogleOAuthService', () => {
       expect(result.success).toBe(false);
       expect(result.error).toContain('no refresh token available');
     });
+  });
+
+  describe('refreshAccessToken edge cases', () => {
+    it('should handle missing access token in response', async () => {
+      const mockOAuth2Client = {
+        setCredentials: jest.fn(),
+        refreshAccessToken: jest.fn().mockResolvedValue({
+          credentials: {
+            // No access_token
+            expiry_date: Date.now() + 3600000,
+          },
+        }),
+      };
+
+      (OAuth2Client as unknown as jest.Mock).mockReturnValue(mockOAuth2Client);
+
+      const result = await oauthService.refreshAccessToken('test-refresh-token');
+
+      expect(result.success).toBe(false);
+      expect(result.error).toContain('Failed to refresh access token');
+    });
+
+    it('should include id_token when provided', async () => {
+      const mockOAuth2Client = {
+        setCredentials: jest.fn(),
+        refreshAccessToken: jest.fn().mockResolvedValue({
+          credentials: {
+            access_token: 'new-access-token',
+            refresh_token: 'new-refresh-token',
+            expiry_date: Date.now() + 3600000,
+            id_token: 'test-id-token',
+          },
+        }),
+      };
+
+      (OAuth2Client as unknown as jest.Mock).mockReturnValue(mockOAuth2Client);
+
+      const result = await oauthService.refreshAccessToken('test-refresh-token');
+
+      expect(result.success).toBe(true);
+      expect(result.tokens?.idToken).toBe('test-id-token');
+    });
+
+    it('should use default expiry when not provided', async () => {
+      const mockOAuth2Client = {
+        setCredentials: jest.fn(),
+        refreshAccessToken: jest.fn().mockResolvedValue({
+          credentials: {
+            access_token: 'new-access-token',
+            // No expiry_date
+          },
+        }),
+      };
+
+      (OAuth2Client as unknown as jest.Mock).mockReturnValue(mockOAuth2Client);
+
+      const result = await oauthService.refreshAccessToken('test-refresh-token');
+
+      expect(result.success).toBe(true);
+      // Expiry should be approximately 1 hour from now
+      expect(result.tokens?.expiresAt).toBeGreaterThan(Date.now() + 3500000);
+    });
+  });
+});
+
+describe('getGoogleOAuthService', () => {
+  it('should return singleton instance', () => {
+    const service1 = getGoogleOAuthService();
+    const service2 = getGoogleOAuthService();
+    expect(service1).toBe(service2);
+  });
+
+  it('should return GoogleOAuthService instance', () => {
+    const service = getGoogleOAuthService();
+    expect(service).toBeInstanceOf(GoogleOAuthService);
   });
 });
