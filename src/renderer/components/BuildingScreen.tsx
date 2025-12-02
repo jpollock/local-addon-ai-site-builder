@@ -10,6 +10,7 @@
 
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
+import { sendIPCEvent } from '@getflywheel/local/renderer';
 import { getElectron } from '../electron-context';
 import { CustomStepper } from './CustomStepper';
 
@@ -119,17 +120,18 @@ export class BuildingScreen extends React.Component<Props, State> {
 
     if (!siteId) {
       console.error('[BuildingScreen] No siteId available');
+      alert('Unable to locate site. Please check the sidebar.');
       return;
     }
 
-    // Navigate to the site in Local
-    // The site should now be visible in the sidebar
-    console.log('[BuildingScreen] Site is ready to view:', siteId);
-
-    // Show confirmation
-    alert(
-      `✅ Site created successfully!\n\nSite ID: ${siteId}\n\nYour site should now be visible in the Local sidebar. Click on it to view details.`
-    );
+    try {
+      console.log('[BuildingScreen] Navigating to site:', siteId);
+      // Use Local's selectSite IPC event to navigate to the site
+      sendIPCEvent('selectSite', siteId, true, true);
+    } catch (error) {
+      console.error('[BuildingScreen] Navigation failed:', error);
+      alert('Unable to navigate to site. Please find it in the sidebar.');
+    }
   };
 
   handleStartOver = () => {
