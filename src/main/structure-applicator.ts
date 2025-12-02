@@ -86,10 +86,12 @@ async function performPreFlightChecks(site: any, localLogger: any): Promise<PreF
     warnings: [],
   };
 
-  // Check 1: Site is running
+  // Check 1: Site is running (or "adding" during WordPress installation)
   try {
     const siteStatus = siteProcessManager.getSiteStatus(site);
-    result.checks.siteRunning = siteStatus === 'running';
+    // Accept both 'running' and 'adding' - during WordPress installation hook,
+    // status is 'adding' but services are running (WP is being installed)
+    result.checks.siteRunning = siteStatus === 'running' || siteStatus === 'adding';
 
     if (!result.checks.siteRunning) {
       result.errors.push(
@@ -97,7 +99,7 @@ async function performPreFlightChecks(site: any, localLogger: any): Promise<PreF
       );
       result.passed = false;
     } else {
-      localLogger.info(`[AI Site Builder] ✓ Pre-flight: Site is running`);
+      localLogger.info(`[AI Site Builder] ✓ Pre-flight: Site is running (status: ${siteStatus})`);
     }
   } catch (error) {
     result.errors.push(`Failed to check site status: ${(error as Error).message}`);
