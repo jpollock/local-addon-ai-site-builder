@@ -41,15 +41,15 @@ This is the easiest method for most users.
 
 #### Step 1: Download the Latest Release
 
-1. Go to the [Releases page](https://github.com/wpengine/ai-site-builder/releases)
+1. Go to the [Releases page](https://github.com/wpengine/local-addon-ai-site-builder/releases)
 2. Download the correct package for your operating system:
 
    | Platform              | Architecture | Download File                             |
    | --------------------- | ------------ | ----------------------------------------- |
-   | macOS (Intel)         | x64          | `ai-site-builder-vX.X.X-darwin-x64.zip`   |
-   | macOS (Apple Silicon) | arm64        | `ai-site-builder-vX.X.X-darwin-arm64.zip` |
-   | Windows               | x64          | `ai-site-builder-vX.X.X-win32-x64.zip`    |
-   | Linux                 | x64          | `ai-site-builder-vX.X.X-linux-x64.zip`    |
+   | macOS (Intel)         | x64          | `ai-site-builder-vX.X.X-darwin-x64.tgz`   |
+   | macOS (Apple Silicon) | arm64        | `ai-site-builder-vX.X.X-darwin-arm64.tgz` |
+   | Windows               | x64          | `ai-site-builder-vX.X.X-win32-x64.tgz`    |
+   | Linux                 | x64          | `ai-site-builder-vX.X.X-linux-x64.tgz`    |
 
    > **Note:** Choose the correct architecture for your system:
    >
@@ -57,104 +57,18 @@ This is the easiest method for most users.
    > - **macOS Apple Silicon:** M1, M2, M3 Macs (2020 and later)
    > - Check your Mac's chip: Apple menu > About This Mac
 
-3. Extract the zip archive to a temporary location
+#### Step 2: Install from Disk in Local
 
-#### Step 2: Locate Local's Addons Directory
+1. Open **Local**
+2. Go to **Add-ons** (in the left sidebar)
+3. Click **Install from disk** (top right)
+4. Select the `.tgz` file you downloaded
 
-The addons directory location varies by operating system:
+#### Step 3: Enable and Relaunch
 
-**macOS:**
-
-```
-~/Library/Application Support/Local/addons
-```
-
-**Windows:**
-
-```
-%APPDATA%\Local\addons
-```
-
-Or typically:
-
-```
-C:\Users\[YourUsername]\AppData\Roaming\Local\addons
-```
-
-**Linux:**
-
-```
-~/.config/Local/addons
-```
-
-#### Step 3: Create the Addons Directory (if needed)
-
-If the directory doesn't exist, create it:
-
-**macOS/Linux:**
-
-```bash
-mkdir -p ~/Library/Application\ Support/Local/addons  # macOS
-mkdir -p ~/.config/Local/addons                        # Linux
-```
-
-**Windows (PowerShell):**
-
-```powershell
-New-Item -ItemType Directory -Path "$env:APPDATA\Local\addons" -Force
-```
-
-#### Step 4: Install the Addon
-
-1. Create a new folder in the addons directory called `ai-site-builder`
-2. Copy all extracted files into this folder
-
-**macOS/Linux Example:**
-
-```bash
-# Navigate to extracted files
-cd ~/Downloads/ai-site-builder-v1.0.0
-
-# Create addon directory
-mkdir -p ~/Library/Application\ Support/Local/addons/ai-site-builder
-
-# Copy files
-cp -r * ~/Library/Application\ Support/Local/addons/ai-site-builder/
-```
-
-**Windows Example (PowerShell):**
-
-```powershell
-# Navigate to extracted files
-cd ~\Downloads\ai-site-builder-v1.0.0
-
-# Create addon directory
-New-Item -ItemType Directory -Path "$env:APPDATA\Local\addons\ai-site-builder" -Force
-
-# Copy files
-Copy-Item -Path * -Destination "$env:APPDATA\Local\addons\ai-site-builder\" -Recurse
-```
-
-#### Step 5: Verify Installation
-
-After copying files, your directory structure should look like:
-
-```
-addons/
-└── ai-site-builder/
-    ├── lib/
-    │   ├── main.js
-    │   └── renderer.js
-    ├── package.json
-    ├── README.md
-    └── INSTALL.md
-```
-
-#### Step 6: Restart Local
-
-1. Quit Local completely (ensure it's not running in the background)
-2. Restart Local
-3. The addon should now appear in Local's sidebar
+1. Find "AI Site Builder" in your installed add-ons list
+2. Toggle it **ON** to enable
+3. Click **Relaunch** when prompted (or quit and restart Local)
 
 ### Method 2: Build from Source
 
