@@ -10,6 +10,7 @@
 
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
+import { sendIPCEvent } from '@getflywheel/local/renderer';
 import { getElectron } from '../electron-context';
 import { CustomStepper } from './CustomStepper';
 
@@ -125,8 +126,8 @@ export class BuildingScreen extends React.Component<Props, State> {
 
     try {
       console.log('[BuildingScreen] Navigating to site:', siteId);
-      // Use replace() so back button doesn't return to completion screen
-      this.props.history.replace(`/site-info/${siteId}/overview`);
+      // Use Local's selectSite IPC event to navigate to the site
+      sendIPCEvent('selectSite', siteId, true, true);
     } catch (error) {
       console.error('[BuildingScreen] Navigation failed:', error);
       alert('Unable to navigate to site. Please find it in the sidebar.');
