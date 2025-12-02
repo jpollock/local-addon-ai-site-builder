@@ -54,8 +54,8 @@ export function registerWordPressHandlers(localLogger: any): void {
           siteDomain: validation.data.siteDomain,
         });
 
-        // Get the addSite service and userData
-        const { addSite: addSiteService, userData } = services;
+        // Get the addSite service, userData, and lightningServices
+        const { addSite: addSiteService, userData, lightningServices } = services;
 
         // Generate site path using user's configured Local Sites directory
         const newSiteDefaults = userData.get('newSiteDefaults', {});
@@ -63,15 +63,62 @@ export function registerWordPressHandlers(localLogger: any): void {
           newSiteDefaults.sitesPath || path.join(os.homedir(), 'Local Sites');
         const sitePath = path.join(defaultSitesPath, validation.data.siteName);
 
+        // Get actual registered service versions to avoid triggering service swaps
+        // (Using mismatched versions causes maybeDownload() to trigger swapService,
+        // which leads to router race conditions)
+        const registeredServices = lightningServices.getRegisteredServices();
+
+        // Get highest registered version for a service type
+        // Returns the binVersion (e.g., '8.2.10')
+        const getDefaultVersion = (serviceName: string): string => {
+          const serviceVersions = registeredServices[serviceName];
+          if (!serviceVersions) return '';
+          const versions = Object.keys(serviceVersions);
+          return versions.length > 0 ? versions[0] : '';
+        };
+
+        // Format service versions:
+        // - phpVersion: just version number (e.g., '8.2.10')
+        // - database: 'mysql-X.X.X' or 'mariadb-X.X.X' format
+        // - webServer: 'nginx-X.X.X' format
+        const phpVersion = validation.data.environment?.php || getDefaultVersion('php');
+
+        // For database and webServer, we need service-version format
+        const mysqlVersion = getDefaultVersion('mysql');
+        const mariadbVersion = getDefaultVersion('mariadb');
+        const nginxVersion = getDefaultVersion('nginx');
+
+        // Prefer MySQL if available, fall back to MariaDB
+        const databaseValue =
+          validation.data.environment?.database ||
+          (mysqlVersion
+            ? `mysql-${mysqlVersion}`
+            : mariadbVersion
+              ? `mariadb-${mariadbVersion}`
+              : '');
+
+        // WebServer format: 'nginx-X.X.X'
+        const webServerValue =
+          validation.data.environment?.webServer ||
+          (nginxVersion ? `nginx-${nginxVersion}` : 'nginx');
+
+        localLogger.info('[AI Site Builder] Using service versions:', {
+          phpVersion,
+          database: databaseValue,
+          webServer: webServerValue,
+          registeredMysql: mysqlVersion,
+          registeredNginx: nginxVersion,
+        });
+
         // Prepare site info
         const newSiteInfo = {
           siteName: validation.data.siteName,
           sitePath,
           siteDomain: validation.data.siteDomain,
           multiSite: { enabled: false },
-          phpVersion: validation.data.environment?.php || '8.2.0',
-          webServer: validation.data.environment?.webServer || 'nginx',
-          database: validation.data.environment?.database || '8.0.16',
+          phpVersion,
+          webServer: webServerValue,
+          database: databaseValue,
           xdebugEnabled: false,
         };
 

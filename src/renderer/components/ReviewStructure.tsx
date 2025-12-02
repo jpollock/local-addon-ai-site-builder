@@ -112,11 +112,7 @@ export class ReviewStructure extends React.Component<Props, State> {
         siteDomain,
         structure: plainStructure,
         figmaAnalysis, // Pass Figma analysis for page/pattern generation
-        environment: {
-          php: '8.2.0',
-          webServer: 'nginx',
-          database: '8.0.16',
-        },
+        // environment omitted - backend uses registered service versions to avoid race conditions
       });
 
       if (!response.success) {
