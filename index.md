@@ -34,10 +34,10 @@ Download the correct package for your platform:
 
 | Platform              | File                                      |
 | --------------------- | ----------------------------------------- |
-| macOS (Intel)         | `ai-site-builder-vX.X.X-darwin-x64.zip`   |
-| macOS (Apple Silicon) | `ai-site-builder-vX.X.X-darwin-arm64.zip` |
-| Windows               | `ai-site-builder-vX.X.X-win32-x64.zip`    |
-| Linux                 | `ai-site-builder-vX.X.X-linux-x64.zip`    |
+| macOS (Intel)         | `ai-site-builder-vX.X.X-darwin-x64.tgz`   |
+| macOS (Apple Silicon) | `ai-site-builder-vX.X.X-darwin-arm64.tgz` |
+| Windows               | `ai-site-builder-vX.X.X-win32-x64.tgz`    |
+| Linux                 | `ai-site-builder-vX.X.X-linux-x64.tgz`    |
 
 See [Installation Guide](INSTALL/) for detailed instructions.
 
