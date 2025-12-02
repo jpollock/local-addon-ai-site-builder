@@ -140,32 +140,33 @@ jobs:
           PLATFORM=${{ matrix.platform }}
           ARCH=${{ matrix.arch }}
 
-          mkdir -p dist
+          # Create package directory (Local expects the addon contents in a subdirectory)
+          mkdir -p dist/package
 
           # Copy compiled code
-          cp -r lib dist/
+          cp -r lib dist/package/
 
           # Copy production dependencies
-          cp -r node_modules dist/
+          cp -r node_modules dist/package/
 
           # Remove dev dependencies from node_modules
-          cd dist
+          cd dist/package
           npm prune --production --ignore-scripts 2>/dev/null || true
-          cd ..
+          cd ../..
 
           # Copy documentation and metadata
-          cp package.json dist/
-          cp README.md dist/ 2>/dev/null || echo "README.md not found"
-          cp INSTALL.md dist/ 2>/dev/null || echo "INSTALL.md not found"
-          cp LICENSE dist/ 2>/dev/null || echo "LICENSE not found"
+          cp package.json dist/package/
+          cp README.md dist/package/ 2>/dev/null || echo "README.md not found"
+          cp INSTALL.md dist/package/ 2>/dev/null || echo "INSTALL.md not found"
+          cp LICENSE dist/package/ 2>/dev/null || echo "LICENSE not found"
 
-          # Create zip archive
+          # Create tgz archive (Local expects .tgz format)
           cd dist
-          zip -r "../ai-site-builder-v${VERSION}-${PLATFORM}-${ARCH}.zip" .
+          tar -czf "../ai-site-builder-v${VERSION}-${PLATFORM}-${ARCH}.tgz" package
           cd ..
 
           # Report artifact size
-          ls -lh "ai-site-builder-v${VERSION}-${PLATFORM}-${ARCH}.zip"
+          ls -lh "ai-site-builder-v${VERSION}-${PLATFORM}-${ARCH}.tgz"
 
       - name: Create distribution package (Windows)
         if: runner.os == 'Windows'
@@ -175,36 +176,39 @@ jobs:
           $PLATFORM = "${{ matrix.platform }}"
           $ARCH = "${{ matrix.arch }}"
 
-          New-Item -ItemType Directory -Force -Path dist
+          # Create package directory (Local expects the addon contents in a subdirectory)
+          New-Item -ItemType Directory -Force -Path dist/package
 
           # Copy compiled code
-          Copy-Item -Recurse lib dist/
+          Copy-Item -Recurse lib dist/package/
 
           # Copy production dependencies
-          Copy-Item -Recurse node_modules dist/
+          Copy-Item -Recurse node_modules dist/package/
 
           # Remove dev dependencies
-          Push-Location dist
+          Push-Location dist/package
           npm prune --production --ignore-scripts 2>$null
           Pop-Location
 
           # Copy documentation and metadata
-          Copy-Item package.json dist/
-          if (Test-Path README.md) { Copy-Item README.md dist/ }
-          if (Test-Path INSTALL.md) { Copy-Item INSTALL.md dist/ }
-          if (Test-Path LICENSE) { Copy-Item LICENSE dist/ }
+          Copy-Item package.json dist/package/
+          if (Test-Path README.md) { Copy-Item README.md dist/package/ }
+          if (Test-Path INSTALL.md) { Copy-Item INSTALL.md dist/package/ }
+          if (Test-Path LICENSE) { Copy-Item LICENSE dist/package/ }
 
-          # Create zip archive
-          Compress-Archive -Path dist/* -DestinationPath "ai-site-builder-v${VERSION}-${PLATFORM}-${ARCH}.zip"
+          # Create tgz archive (Local expects .tgz format)
+          Push-Location dist
+          tar -czf "../ai-site-builder-v${VERSION}-${PLATFORM}-${ARCH}.tgz" package
+          Pop-Location
 
           # Report artifact size
-          Get-ChildItem "ai-site-builder-v${VERSION}-${PLATFORM}-${ARCH}.zip"
+          Get-ChildItem "ai-site-builder-v${VERSION}-${PLATFORM}-${ARCH}.tgz"
 
       - name: Upload platform artifact
         uses: actions/upload-artifact@v4
         with:
           name: addon-${{ matrix.platform }}-${{ matrix.arch }}
-          path: ai-site-builder-v${{ steps.get_version.outputs.VERSION }}-${{ matrix.platform }}-${{ matrix.arch }}.zip
+          path: ai-site-builder-v${{ steps.get_version.outputs.VERSION }}-${{ matrix.platform }}-${{ matrix.arch }}.tgz
           retention-days: 90
 
   release:
@@ -234,14 +238,14 @@ jobs:
       - name: List artifacts
         run: |
           echo "Downloaded artifacts:"
-          find artifacts -type f -name "*.zip" | while read f; do
+          find artifacts -type f -name "*.tgz" | while read f; do
             echo "  - $(basename $f) ($(du -h "$f" | cut -f1))"
           done
 
       - name: Move artifacts to root
         run: |
-          find artifacts -name "*.zip" -exec mv {} . \;
-          ls -la *.zip
+          find artifacts -name "*.tgz" -exec mv {} . \;
+          ls -la *.tgz
 
       - name: Generate release notes
         id: release_notes
@@ -300,10 +304,10 @@ jobs:
             echo ""
             echo "| Platform | Architecture | File |"
             echo "|----------|--------------|------|"
-            echo "| macOS | Intel (x64) | \`ai-site-builder-v${{ steps.get_version.outputs.VERSION }}-darwin-x64.zip\` |"
-            echo "| macOS | Apple Silicon (arm64) | \`ai-site-builder-v${{ steps.get_version.outputs.VERSION }}-darwin-arm64.zip\` |"
-            echo "| Windows | x64 | \`ai-site-builder-v${{ steps.get_version.outputs.VERSION }}-win32-x64.zip\` |"
-            echo "| Linux | x64 | \`ai-site-builder-v${{ steps.get_version.outputs.VERSION }}-linux-x64.zip\` |"
+            echo "| macOS | Intel (x64) | \`ai-site-builder-v${{ steps.get_version.outputs.VERSION }}-darwin-x64.tgz\` |"
+            echo "| macOS | Apple Silicon (arm64) | \`ai-site-builder-v${{ steps.get_version.outputs.VERSION }}-darwin-arm64.tgz\` |"
+            echo "| Windows | x64 | \`ai-site-builder-v${{ steps.get_version.outputs.VERSION }}-win32-x64.tgz\` |"
+            echo "| Linux | x64 | \`ai-site-builder-v${{ steps.get_version.outputs.VERSION }}-linux-x64.tgz\` |"
             echo ""
             echo "See [INSTALL.md](INSTALL.md) for detailed installation instructions."
             echo ""
@@ -320,10 +324,10 @@ jobs:
           name: Release v${{ steps.get_version.outputs.VERSION }}
           body: ${{ steps.release_notes.outputs.RELEASE_NOTES }}
           files: |
-            ai-site-builder-v${{ steps.get_version.outputs.VERSION }}-darwin-x64.zip
-            ai-site-builder-v${{ steps.get_version.outputs.VERSION }}-darwin-arm64.zip
-            ai-site-builder-v${{ steps.get_version.outputs.VERSION }}-win32-x64.zip
-            ai-site-builder-v${{ steps.get_version.outputs.VERSION }}-linux-x64.zip
+            ai-site-builder-v${{ steps.get_version.outputs.VERSION }}-darwin-x64.tgz
+            ai-site-builder-v${{ steps.get_version.outputs.VERSION }}-darwin-arm64.tgz
+            ai-site-builder-v${{ steps.get_version.outputs.VERSION }}-win32-x64.tgz
+            ai-site-builder-v${{ steps.get_version.outputs.VERSION }}-linux-x64.tgz
           draft: false
           prerelease: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') || contains(github.ref, 'rc') }}
         env:
