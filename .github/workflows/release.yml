@@ -146,19 +146,22 @@ jobs:
           # Copy compiled code
           cp -r lib dist/package/
 
-          # Copy production dependencies
-          cp -r node_modules dist/package/
-
-          # Remove dev dependencies from node_modules
-          cd dist/package
-          npm prune --production --ignore-scripts 2>/dev/null || true
-          cd ../..
-
-          # Copy documentation and metadata
+          # Copy package files
           cp package.json dist/package/
+          cp package-lock.json dist/package/ 2>/dev/null || true
           cp README.md dist/package/ 2>/dev/null || echo "README.md not found"
           cp INSTALL.md dist/package/ 2>/dev/null || echo "INSTALL.md not found"
           cp LICENSE dist/package/ 2>/dev/null || echo "LICENSE not found"
+
+          # Install production dependencies only (fresh install, no dev deps)
+          cd dist/package
+          npm ci --omit=dev --ignore-scripts || npm install --omit=dev --ignore-scripts
+          cd ../..
+
+          # Verify key dependencies exist
+          echo "Checking for required dependencies..."
+          ls -la dist/package/node_modules/@anthropic-ai/sdk/ || echo "WARNING: @anthropic-ai/sdk not found!"
+          ls -la dist/package/node_modules/openai/ || echo "WARNING: openai not found!"
 
           # Create tgz archive (Local expects .tgz format)
           cd dist
@@ -167,6 +170,10 @@ jobs:
 
           # Report artifact size
           ls -lh "ai-site-builder-v${VERSION}-${PLATFORM}-${ARCH}.tgz"
+
+          # Show package contents summary
+          echo "Package contents:"
+          tar -tzf "ai-site-builder-v${VERSION}-${PLATFORM}-${ARCH}.tgz" | head -50
 
       - name: Create distribution package (Windows)
         if: runner.os == 'Windows'
@@ -182,19 +189,23 @@ jobs:
           # Copy compiled code
           Copy-Item -Recurse lib dist/package/
 
-          # Copy production dependencies
-          Copy-Item -Recurse node_modules dist/package/
-
-          # Remove dev dependencies
-          Push-Location dist/package
-          npm prune --production --ignore-scripts 2>$null
-          Pop-Location
-
-          # Copy documentation and metadata
+          # Copy package files
           Copy-Item package.json dist/package/
+          if (Test-Path package-lock.json) { Copy-Item package-lock.json dist/package/ }
           if (Test-Path README.md) { Copy-Item README.md dist/package/ }
           if (Test-Path INSTALL.md) { Copy-Item INSTALL.md dist/package/ }
           if (Test-Path LICENSE) { Copy-Item LICENSE dist/package/ }
+
+          # Install production dependencies only (fresh install, no dev deps)
+          Push-Location dist/package
+          npm ci --omit=dev --ignore-scripts
+          if ($LASTEXITCODE -ne 0) { npm install --omit=dev --ignore-scripts }
+          Pop-Location
+
+          # Verify key dependencies exist
+          Write-Host "Checking for required dependencies..."
+          Get-ChildItem dist/package/node_modules/@anthropic-ai/sdk/ -ErrorAction SilentlyContinue
+          Get-ChildItem dist/package/node_modules/openai/ -ErrorAction SilentlyContinue
 
           # Create tgz archive (Local expects .tgz format)
           Push-Location dist
