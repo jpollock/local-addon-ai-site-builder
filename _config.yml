@@ -2,10 +2,10 @@
 title: AI Site Builder for Local
 description: AI-powered WordPress site scaffolding for Local by Flywheel
 baseurl: "/local-addon-ai-site-builder"
-url: "https://wpengine.github.io"
+url: "https://jpollock.github.io"
 
 # Theme
-remote_theme: pages-themes/minimal@v0.2.0
+remote_theme: pages-themes/hacker@v0.2.0
 plugins:
   - jekyll-remote-theme
 
