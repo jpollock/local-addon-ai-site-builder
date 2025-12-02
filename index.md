@@ -17,7 +17,7 @@ AI-powered WordPress site scaffolding for [Local by Flywheel](https://localwp.co
 
 ## Quick Start
 
-1. [Install the addon](docs/USER_GUIDE#installation)
+1. [Install the addon](INSTALL/)
 2. [Configure an AI provider](docs/USER_GUIDE#setting-up-ai-providers)
 3. [Create your first site](docs/USER_GUIDE#creating-your-first-site)
 
