@@ -13,6 +13,7 @@ By participating in this project, you agree to maintain a respectful and collabo
 Before creating bug reports, please check existing issues to avoid duplicates.
 
 **Bug reports should include:**
+
 - Clear, descriptive title
 - Steps to reproduce the issue
 - Expected behavior
@@ -27,6 +28,7 @@ Before creating bug reports, please check existing issues to avoid duplicates.
 ### Suggesting Enhancements
 
 Enhancement suggestions are welcome! Please provide:
+
 - Clear description of the proposed feature
 - Use cases and benefits
 - Mockups or examples (if applicable)
@@ -35,12 +37,14 @@ Enhancement suggestions are welcome! Please provide:
 ### Pull Requests
 
 1. **Fork the Repository**
+
    ```bash
    git clone https://github.com/your-username/ai-site-builder.git
    cd ai-site-builder
    ```
 
 2. **Create a Branch**
+
    ```bash
    git checkout -b feature/your-feature-name
    # or
@@ -48,6 +52,7 @@ Enhancement suggestions are welcome! Please provide:
    ```
 
 3. **Install Dependencies**
+
    ```bash
    npm install
    ```
@@ -59,6 +64,7 @@ Enhancement suggestions are welcome! Please provide:
    - Update documentation as needed
 
 5. **Run Tests and Linting**
+
    ```bash
    npm test
    npm run lint
@@ -86,6 +92,7 @@ Enhancement suggestions are welcome! Please provide:
    - `ci:` - CI/CD changes
 
 7. **Push to Your Fork**
+
    ```bash
    git push origin feature/your-feature-name
    ```
@@ -114,7 +121,7 @@ git clone https://github.com/your-username/ai-site-builder.git
 cd ai-site-builder
 
 # Add upstream remote
-git remote add upstream https://github.com/wpengine/ai-site-builder.git
+git remote add upstream https://github.com/jpollock/ai-site-builder.git
 
 # Install dependencies
 npm install
@@ -129,6 +136,7 @@ npm test
 ### Development Workflow
 
 1. **Keep Your Fork Updated**
+
    ```bash
    git fetch upstream
    git checkout main
@@ -136,11 +144,13 @@ npm test
    ```
 
 2. **Create Feature Branch**
+
    ```bash
    git checkout -b feature/new-feature
    ```
 
 3. **Development Cycle**
+
    ```bash
    # Watch mode for development
    npm run watch
@@ -150,6 +160,7 @@ npm test
    ```
 
 4. **Before Committing**
+
    ```bash
    # Run full test suite
    npm test
@@ -243,6 +254,7 @@ npm run test:coverage
 ### User Documentation
 
 When adding features, update:
+
 - README.md - Feature overview
 - INSTALL.md - Installation steps (if changed)
 - CHANGELOG.md - Add entry under "Unreleased"
@@ -260,6 +272,7 @@ When adding features, update:
 ### Commit Messages
 
 **Format:**
+
 ```
 type(scope): subject
 
@@ -269,6 +282,7 @@ footer
 ```
 
 **Example:**
+
 ```
 feat(navigation): add hierarchical menu support
 
@@ -296,6 +310,7 @@ This project uses Husky for pre-commit hooks:
 - **Tests**: Runs relevant tests (pre-push)
 
 If hooks fail:
+
 ```bash
 # Fix linting issues
 npm run lint:fix
@@ -330,8 +345,8 @@ Releases are managed by maintainers:
 
 ## Questions?
 
-- **Issues**: https://github.com/wpengine/ai-site-builder/issues
-- **Discussions**: https://github.com/wpengine/ai-site-builder/discussions
+- **Issues**: https://github.com/jpollock/ai-site-builder/issues
+- **Discussions**: https://github.com/jpollock/ai-site-builder/discussions
 
 ## License
 

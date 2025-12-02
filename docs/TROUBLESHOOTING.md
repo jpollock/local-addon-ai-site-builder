@@ -386,7 +386,7 @@ Security events are logged to:
 If you can't resolve the issue:
 
 1. **Search existing issues:**
-   [github.com/wpengine/ai-site-builder/issues](https://github.com/wpengine/ai-site-builder/issues)
+   [github.com/jpollock/ai-site-builder/issues](https://github.com/jpollock/ai-site-builder/issues)
 
 2. **Create a new issue with:**
    - Operating system and version
@@ -396,7 +396,7 @@ If you can't resolve the issue:
    - Relevant log excerpts
 
 3. **Community support:**
-   [GitHub Discussions](https://github.com/wpengine/ai-site-builder/discussions)
+   [GitHub Discussions](https://github.com/jpollock/ai-site-builder/discussions)
 
 ---
 

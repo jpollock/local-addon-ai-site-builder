@@ -81,7 +81,7 @@ The renderer process handles:
 
 ```bash
 # Clone the repository
-git clone https://github.com/wpengine/ai-site-builder.git
+git clone https://github.com/jpollock/ai-site-builder.git
 cd ai-site-builder
 
 # Install dependencies

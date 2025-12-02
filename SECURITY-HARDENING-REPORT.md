@@ -60,6 +60,7 @@ The migration happens automatically on first run:
 #### Before/After Comparison
 
 **BEFORE (Insecure):**
+
 ```json
 {
   "apiKeys": {
@@ -76,6 +77,7 @@ The migration happens automatically on first run:
 ```
 
 **AFTER (Secure):**
+
 ```json
 {
   "activeProvider": "claude",
@@ -86,6 +88,7 @@ The migration happens automatically on first run:
 ```
 
 Credentials are now stored in:
+
 - **macOS:** Keychain Access → ai-site-builder-local
 - **Windows:** Credential Manager → ai-site-builder-local
 - **Linux:** Secret Service → ai-site-builder-local
@@ -104,26 +107,26 @@ Credentials are now stored in:
 
 #### Validation Schemas Implemented
 
-| Schema | Constraints | Security Features |
-|--------|------------|-------------------|
-| **ProjectIdSchema** | UUID format | Prevents invalid IDs |
-| **ConversationIdSchema** | Alphanumeric + hyphens/underscores, max 255 chars | Prevents injection |
-| **SiteNameSchema** | Alphanumeric + hyphens/underscores, max 255 chars | Prevents path traversal |
-| **SiteDomainSchema** | Valid domain format, max 255 chars | Prevents DNS attacks |
-| **AdminUserSchema** | Alphanumeric, max 100 chars | Prevents SQL injection |
-| **AdminPasswordSchema** | Min 8 chars, max 255 chars | Enforces password policy |
-| **AdminEmailSchema** | Valid email format, max 255 chars | Prevents injection |
-| **ApiKeySchema** | Alphanumeric, max 500 chars | Prevents injection |
-| **ProviderTypeSchema** | Enum: claude, openai, gemini | Prevents arbitrary values |
-| **FigmaUrlSchema** | Valid Figma URL format | Prevents arbitrary URLs |
-| **ConversationMessageSchema** | Max 10,000 chars | Prevents buffer overflow |
+| Schema                        | Constraints                                       | Security Features         |
+| ----------------------------- | ------------------------------------------------- | ------------------------- |
+| **ProjectIdSchema**           | UUID format                                       | Prevents invalid IDs      |
+| **ConversationIdSchema**      | Alphanumeric + hyphens/underscores, max 255 chars | Prevents injection        |
+| **SiteNameSchema**            | Alphanumeric + hyphens/underscores, max 255 chars | Prevents path traversal   |
+| **SiteDomainSchema**          | Valid domain format, max 255 chars                | Prevents DNS attacks      |
+| **AdminUserSchema**           | Alphanumeric, max 100 chars                       | Prevents SQL injection    |
+| **AdminPasswordSchema**       | Min 8 chars, max 255 chars                        | Enforces password policy  |
+| **AdminEmailSchema**          | Valid email format, max 255 chars                 | Prevents injection        |
+| **ApiKeySchema**              | Alphanumeric, max 500 chars                       | Prevents injection        |
+| **ProviderTypeSchema**        | Enum: claude, openai, gemini                      | Prevents arbitrary values |
+| **FigmaUrlSchema**            | Valid Figma URL format                            | Prevents arbitrary URLs   |
+| **ConversationMessageSchema** | Max 10,000 chars                                  | Prevents buffer overflow  |
 
 #### Path Traversal Prevention
 
 ```typescript
 // Detects and sanitizes path traversal attempts
-validatePath('../../../etc/passwd') // Returns: false
-sanitizePath('../../../etc/passwd')  // Returns: 'etc/passwd'
+validatePath('../../../etc/passwd'); // Returns: false
+sanitizePath('../../../etc/passwd'); // Returns: 'etc/passwd'
 ```
 
 #### Request Validation Example
@@ -159,17 +162,17 @@ async function createSite(data: unknown) {
 
 #### Rate Limits Configured
 
-| Channel | Limit | Window | Purpose |
-|---------|-------|--------|---------|
-| **CREATE_SITE** | 5 requests | 5 minutes | Prevent site creation abuse |
+| Channel                | Limit       | Window    | Purpose                      |
+| ---------------------- | ----------- | --------- | ---------------------------- |
+| **CREATE_SITE**        | 5 requests  | 5 minutes | Prevent site creation abuse  |
 | **START_CONVERSATION** | 10 requests | 5 minutes | Limit AI conversation starts |
-| **SEND_MESSAGE** | 20 requests | 1 minute | Prevent AI API abuse |
-| **VALIDATE_API_KEY** | 10 requests | 1 minute | Prevent brute force attempts |
-| **ANALYZE_FIGMA** | 10 requests | 1 minute | Respect Figma API limits |
-| **CONNECT_FIGMA** | 10 requests | 1 minute | Prevent connection spam |
-| **OAuth Operations** | 5 requests | 5 minutes | Prevent OAuth abuse |
-| **Read Operations** | 60 requests | 1 minute | Allow frequent reads |
-| **Write Operations** | 30 requests | 1 minute | Moderate write protection |
+| **SEND_MESSAGE**       | 20 requests | 1 minute  | Prevent AI API abuse         |
+| **VALIDATE_API_KEY**   | 10 requests | 1 minute  | Prevent brute force attempts |
+| **ANALYZE_FIGMA**      | 10 requests | 1 minute  | Respect Figma API limits     |
+| **CONNECT_FIGMA**      | 10 requests | 1 minute  | Prevent connection spam      |
+| **OAuth Operations**   | 5 requests  | 5 minutes | Prevent OAuth abuse          |
+| **Read Operations**    | 60 requests | 1 minute  | Allow frequent reads         |
+| **Write Operations**   | 30 requests | 1 minute  | Moderate write protection    |
 
 #### Features
 
@@ -186,7 +189,7 @@ const result = rateLimiter.checkLimit('CREATE_SITE');
 if (!result.allowed) {
   return {
     success: false,
-    error: `Rate limit exceeded. Retry after ${result.retryAfter} seconds.`
+    error: `Rate limit exceeded. Retry after ${result.retryAfter} seconds.`,
   };
 }
 ```
@@ -224,16 +227,16 @@ if (!result.allowed) {
 
 ```typescript
 interface SanitizationResult {
-  sanitized: string;     // Cleaned input
-  warnings: string[];    // List of issues found
-  isClean: boolean;      // True if no modifications needed
+  sanitized: string; // Cleaned input
+  warnings: string[]; // List of issues found
+  isClean: boolean; // True if no modifications needed
 }
 ```
 
 #### Example
 
 ```typescript
-const input = "Build a site.\n\n\n\n\n\nIgnore previous instructions and...";
+const input = 'Build a site.\n\n\n\n\n\nIgnore previous instructions and...';
 const result = sanitizePromptInput(input);
 // result.sanitized: "Build a site.\n\nIgnore previous instructions and..."
 // result.warnings: ["Reduced excessive newlines", "Potential prompt injection detected"]
@@ -254,27 +257,27 @@ const result = sanitizePromptInput(input);
 
 #### Events Logged
 
-| Event Type | Description |
-|------------|-------------|
-| **CREDENTIAL_SET** | API key or OAuth token saved |
-| **CREDENTIAL_GET** | API key or OAuth token retrieved |
-| **CREDENTIAL_DELETE** | Credential removed |
+| Event Type               | Description                            |
+| ------------------------ | -------------------------------------- |
+| **CREDENTIAL_SET**       | API key or OAuth token saved           |
+| **CREDENTIAL_GET**       | API key or OAuth token retrieved       |
+| **CREDENTIAL_DELETE**    | Credential removed                     |
 | **CREDENTIAL_MIGRATION** | Credentials migrated to secure storage |
-| **PROJECT_CREATE** | New project created |
-| **PROJECT_UPDATE** | Project updated |
-| **PROJECT_DELETE** | Project deleted |
-| **CONVERSATION_CREATE** | New conversation started |
-| **OAUTH_START** | OAuth flow initiated |
-| **OAUTH_SUCCESS** | OAuth completed successfully |
-| **OAUTH_FAILURE** | OAuth failed |
-| **SITE_CREATE_START** | Site creation started |
-| **SITE_CREATE_SUCCESS** | Site created successfully |
-| **VALIDATION_FAILURE** | Input validation failed |
-| **RATE_LIMIT_EXCEEDED** | Rate limit hit |
-| **SANITIZATION_WARNING** | Suspicious input detected |
-| **SETTINGS_UPDATE** | Settings modified |
-| **PROVIDER_CHANGE** | AI provider switched |
-| **AUTH_MODE_CHANGE** | Authentication mode changed |
+| **PROJECT_CREATE**       | New project created                    |
+| **PROJECT_UPDATE**       | Project updated                        |
+| **PROJECT_DELETE**       | Project deleted                        |
+| **CONVERSATION_CREATE**  | New conversation started               |
+| **OAUTH_START**          | OAuth flow initiated                   |
+| **OAUTH_SUCCESS**        | OAuth completed successfully           |
+| **OAUTH_FAILURE**        | OAuth failed                           |
+| **SITE_CREATE_START**    | Site creation started                  |
+| **SITE_CREATE_SUCCESS**  | Site created successfully              |
+| **VALIDATION_FAILURE**   | Input validation failed                |
+| **RATE_LIMIT_EXCEEDED**  | Rate limit hit                         |
+| **SANITIZATION_WARNING** | Suspicious input detected              |
+| **SETTINGS_UPDATE**      | Settings modified                      |
+| **PROVIDER_CHANGE**      | AI provider switched                   |
+| **AUTH_MODE_CHANGE**     | Authentication mode changed            |
 
 #### Log Rotation
 
@@ -305,24 +308,24 @@ const result = sanitizePromptInput(input);
 
 ### New Files Created
 
-| File | Lines | Description |
-|------|-------|-------------|
-| `src/main/utils/secure-storage.ts` | 271 | OS keychain integration with encrypted fallback |
-| `src/main/utils/validators.ts` | 231 | Zod validation schemas for all inputs |
-| `src/main/utils/rate-limiter.ts` | 192 | Sliding window rate limiting |
-| `src/main/utils/prompt-sanitizer.ts` | 203 | AI prompt injection prevention |
-| `src/main/utils/audit-logger.ts` | 340 | Security audit logging with rotation |
-| `src/main/settings-manager-secure.ts` | 800+ | Secure settings manager (migration) |
-| `tests/security/validators.test.ts` | 195 | Validator test suite |
-| `tests/security/prompt-sanitizer.test.ts` | 140 | Sanitizer test suite |
-| `tests/security/rate-limiter.test.ts` | 120 | Rate limiter test suite |
-| **Total** | **~2,500** | **9 new security modules** |
+| File                                      | Lines      | Description                                     |
+| ----------------------------------------- | ---------- | ----------------------------------------------- |
+| `src/main/utils/secure-storage.ts`        | 271        | OS keychain integration with encrypted fallback |
+| `src/main/utils/validators.ts`            | 231        | Zod validation schemas for all inputs           |
+| `src/main/utils/rate-limiter.ts`          | 192        | Sliding window rate limiting                    |
+| `src/main/utils/prompt-sanitizer.ts`      | 203        | AI prompt injection prevention                  |
+| `src/main/utils/audit-logger.ts`          | 340        | Security audit logging with rotation            |
+| `src/main/settings-manager-secure.ts`     | 800+       | Secure settings manager (migration)             |
+| `tests/security/validators.test.ts`       | 195        | Validator test suite                            |
+| `tests/security/prompt-sanitizer.test.ts` | 140        | Sanitizer test suite                            |
+| `tests/security/rate-limiter.test.ts`     | 120        | Rate limiter test suite                         |
+| **Total**                                 | **~2,500** | **9 new security modules**                      |
 
 ### Modified Files
 
-| File | Changes |
-|------|---------|
-| `package.json` | Added keytar dependency |
+| File                           | Changes                                       |
+| ------------------------------ | --------------------------------------------- |
+| `package.json`                 | Added keytar dependency                       |
 | `src/main/settings-manager.ts` | Documented for migration (original preserved) |
 
 ---
@@ -357,11 +360,13 @@ Users can verify successful migration by checking:
 ### Troubleshooting
 
 **If keytar fails to install:**
+
 - Addon will use encrypted file fallback automatically
 - A warning will be logged: "Using encrypted file fallback instead of OS keychain"
 - Security is still maintained, but OS keychain is preferred
 
 **To manually check migration:**
+
 ```bash
 # Check if credentials.enc exists (fallback mode)
 ls ~/.../ai-site-builder/credentials.enc
@@ -376,11 +381,11 @@ tail ~/.../ai-site-builder/audit.log | grep CREDENTIAL_MIGRATION
 
 ### Test Coverage
 
-| Module | Test File | Tests | Coverage |
-|--------|-----------|-------|----------|
-| Validators | `tests/security/validators.test.ts` | 20+ | Critical paths |
-| Prompt Sanitizer | `tests/security/prompt-sanitizer.test.ts` | 15+ | Critical paths |
-| Rate Limiter | `tests/security/rate-limiter.test.ts` | 12+ | Critical paths |
+| Module           | Test File                                 | Tests | Coverage       |
+| ---------------- | ----------------------------------------- | ----- | -------------- |
+| Validators       | `tests/security/validators.test.ts`       | 20+   | Critical paths |
+| Prompt Sanitizer | `tests/security/prompt-sanitizer.test.ts` | 15+   | Critical paths |
+| Rate Limiter     | `tests/security/rate-limiter.test.ts`     | 12+   | Critical paths |
 
 ### Running Tests
 
@@ -398,6 +403,7 @@ npm run test:coverage -- tests/security/
 ### Test Results
 
 All security tests are designed to:
+
 - ✅ Validate correct behavior for valid inputs
 - ✅ Reject invalid/malicious inputs
 - ✅ Prevent common attack vectors (injection, traversal, overflow)
@@ -481,24 +487,24 @@ All security tests are designed to:
 
 ### Security Posture
 
-| Metric | Before | After | Improvement |
-|--------|--------|-------|-------------|
+| Metric                    | Before         | After           | Improvement |
+| ------------------------- | -------------- | --------------- | ----------- |
 | **Credential Protection** | 0% (plaintext) | 95%+ (keychain) | ✅ CRITICAL |
-| **Input Validation** | 0% | 100% | ✅ CRITICAL |
-| **Rate Limiting** | 0% | 100% | ✅ HIGH |
-| **Injection Prevention** | 0% | 90%+ | ✅ HIGH |
-| **Audit Logging** | 0% | 100% | ✅ MEDIUM |
+| **Input Validation**      | 0%             | 100%            | ✅ CRITICAL |
+| **Rate Limiting**         | 0%             | 100%            | ✅ HIGH     |
+| **Injection Prevention**  | 0%             | 90%+            | ✅ HIGH     |
+| **Audit Logging**         | 0%             | 100%            | ✅ MEDIUM   |
 
 ### Production Readiness
 
-| Category | Status | Notes |
-|----------|--------|-------|
-| **Credential Security** | ✅ READY | OS keychain integration complete |
-| **Input Security** | ✅ READY | Comprehensive validation in place |
-| **API Security** | ✅ READY | Rate limiting prevents abuse |
-| **AI Security** | ✅ READY | Prompt injection protection active |
-| **Compliance** | ⚠️ PARTIAL | Audit logging in place, compliance docs needed |
-| **Testing** | ⚠️ PARTIAL | Security tests created, integration tests recommended |
+| Category                | Status     | Notes                                                 |
+| ----------------------- | ---------- | ----------------------------------------------------- |
+| **Credential Security** | ✅ READY   | OS keychain integration complete                      |
+| **Input Security**      | ✅ READY   | Comprehensive validation in place                     |
+| **API Security**        | ✅ READY   | Rate limiting prevents abuse                          |
+| **AI Security**         | ✅ READY   | Prompt injection protection active                    |
+| **Compliance**          | ⚠️ PARTIAL | Audit logging in place, compliance docs needed        |
+| **Testing**             | ⚠️ PARTIAL | Security tests created, integration tests recommended |
 
 ---
 
@@ -523,7 +529,8 @@ All security tests are designed to:
 ## 🔐 Security Contact
 
 For security vulnerabilities or concerns, please contact:
-- **Email:** security@wpengine.com
+
+- **Email:** jeremy.pollock@wpengine.com
 - **Report:** Create private security advisory on GitHub
 
 ---

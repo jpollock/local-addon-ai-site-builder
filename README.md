@@ -1,6 +1,6 @@
 # AI Site Builder
 
-[![CI](https://github.com/wpengine/ai-site-builder/actions/workflows/ci.yml/badge.svg)](https://github.com/wpengine/ai-site-builder/actions/workflows/ci.yml)
+[![CI](https://github.com/jpollock/ai-site-builder/actions/workflows/ci.yml/badge.svg)](https://github.com/jpollock/ai-site-builder/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Version](https://img.shields.io/badge/version-0.1.0-green.svg)](package.json)
 
@@ -29,7 +29,7 @@ See [INSTALL.md](INSTALL.md) for detailed installation instructions.
 
 ### Quick Install
 
-1. Download the correct package for your operating system from the [Releases page](https://github.com/wpengine/ai-site-builder/releases):
+1. Download the correct package for your operating system from the [Releases page](https://github.com/jpollock/ai-site-builder/releases):
 
    | Platform              | File                                      |
    | --------------------- | ----------------------------------------- |
@@ -100,7 +100,7 @@ The addon guides you through a comprehensive site planning process:
 
 ```bash
 # Clone the repository
-git clone https://github.com/wpengine/ai-site-builder.git
+git clone https://github.com/jpollock/ai-site-builder.git
 cd ai-site-builder
 
 # Install dependencies
@@ -234,7 +234,7 @@ See [CHANGELOG.md](CHANGELOG.md) for a detailed list of changes.
 
 ### Reporting Security Issues
 
-Please report security vulnerabilities to security@wpengine.com. Do not open public issues for security concerns.
+Please report security vulnerabilities to security@jpollock.com. Do not open public issues for security concerns.
 
 ## License
 
@@ -243,8 +243,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Support
 
 - **Documentation**: [INSTALL.md](INSTALL.md)
-- **Issues**: [GitHub Issues](https://github.com/wpengine/ai-site-builder/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/wpengine/ai-site-builder/discussions)
+- **Issues**: [GitHub Issues](https://github.com/jpollock/ai-site-builder/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/jpollock/ai-site-builder/discussions)
 
 ## Acknowledgments
 

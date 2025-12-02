@@ -48,9 +48,9 @@ See [Installation Guide](INSTALL/) for detailed instructions.
 
 ## Links
 
-- [GitHub Repository](https://github.com/wpengine/ai-site-builder)
+- [GitHub Repository](https://github.com/jpollock/ai-site-builder)
 - [Release Notes](CHANGELOG/)
-- [Report Issues](https://github.com/wpengine/ai-site-builder/issues)
+- [Report Issues](https://github.com/jpollock/ai-site-builder/issues)
 
 ---
 

@@ -449,7 +449,7 @@ If you encounter issues:
 
 1. **Check this guide** for common solutions
 2. **View the [README](../README.md)** for additional info
-3. **Search [GitHub Issues](https://github.com/wpengine/ai-site-builder/issues)**
+3. **Search [GitHub Issues](https://github.com/jpollock/ai-site-builder/issues)**
 4. **Create a new issue** with:
    - Your OS and Local version
    - Steps to reproduce

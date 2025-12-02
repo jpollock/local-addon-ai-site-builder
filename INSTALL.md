@@ -41,7 +41,7 @@ This is the easiest method for most users.
 
 #### Step 1: Download the Latest Release
 
-1. Go to the [Releases page](https://github.com/wpengine/local-addon-ai-site-builder/releases)
+1. Go to the [Releases page](https://github.com/jpollock/local-addon-ai-site-builder/releases)
 2. Download the correct package for your operating system:
 
    | Platform              | Architecture | Download File                             |
@@ -77,7 +77,7 @@ For developers or those who want to customize the addon.
 #### Step 1: Clone the Repository
 
 ```bash
-git clone https://github.com/wpengine/ai-site-builder.git
+git clone https://github.com/jpollock/ai-site-builder.git
 cd ai-site-builder
 ```
 
@@ -409,7 +409,7 @@ If you encounter issues not covered here:
    - [CHANGELOG.md](CHANGELOG.md) - Recent changes
 
 2. **Search Existing Issues**
-   - https://github.com/wpengine/ai-site-builder/issues
+   - https://github.com/jpollock/ai-site-builder/issues
 
 3. **Create New Issue**
    - Include your OS and Local version
@@ -417,7 +417,7 @@ If you encounter issues not covered here:
    - Attach relevant logs
 
 4. **Community Support**
-   - GitHub Discussions: https://github.com/wpengine/ai-site-builder/discussions
+   - GitHub Discussions: https://github.com/jpollock/ai-site-builder/discussions
 
 ## Next Steps
 
