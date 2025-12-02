@@ -18,7 +18,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:ci": "jest --ci --coverage --maxWorkers=2",
-    "test:coverage": "jest --coverage --coverageThreshold='{\"global\":{\"branches\":35,\"functions\":40,\"lines\":45,\"statements\":45}}'",
+    "test:coverage": "jest --coverage --coverageThreshold='{\"global\":{\"branches\":65,\"functions\":80,\"lines\":78,\"statements\":78}}'",
     "type-check": "tsc --noEmit",
     "lint": "eslint 'src/**/*.{ts,tsx}' --max-warnings=0",
     "lint:fix": "eslint 'src/**/*.{ts,tsx}' --fix",
