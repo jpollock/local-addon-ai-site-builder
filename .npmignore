@@ -1,0 +1,48 @@
+# Source files
+src/
+tests/
+requirements/
+
+# Development files
+.husky/
+.github/
+*.config.js
+*.config.ts
+tsconfig.json
+jest.config.js
+.eslintrc.json
+.prettierrc.json
+.prettierignore
+
+# Git files
+.git/
+.gitignore
+
+# Dependencies
+node_modules/
+
+# Build artifacts
+coverage/
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary files
+*.tmp
+*.json.tmp
+
+# Scripts not needed in distribution
+scripts/install-addon.js
+scripts/uninstall-addon.js
+
+# Documentation (keep only essential docs)
+CONTRIBUTING.md

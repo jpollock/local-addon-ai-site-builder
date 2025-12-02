@@ -1,0 +1,326 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  ci:
+    name: Run CI
+    uses: ./.github/workflows/ci.yml
+
+  validate-release:
+    name: Validate Release
+    runs-on: ubuntu-latest
+    needs: ci
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Check version consistency
+        run: |
+          PKG_VERSION=$(node -p "require('./package.json').version")
+          TAG_VERSION=${GITHUB_REF#refs/tags/v}
+          if [ "$PKG_VERSION" != "$TAG_VERSION" ]; then
+            echo "::error::Version mismatch: package.json=$PKG_VERSION, tag=$TAG_VERSION"
+            exit 1
+          fi
+          echo "Version validated: $PKG_VERSION"
+
+      - name: Validate package.json fields
+        run: |
+          node -e "
+            const pkg = require('./package.json');
+            const errors = [];
+            if (!pkg.productName) errors.push('Missing productName (required for Local addons)');
+            if (!pkg.main) errors.push('Missing main entry point');
+            if (!pkg.renderer) errors.push('Missing renderer entry point');
+            if (!pkg.name) errors.push('Missing package name');
+            if (errors.length) {
+              errors.forEach(e => console.error('::error::' + e));
+              process.exit(1);
+            }
+            console.log('Package fields validated:');
+            console.log('  productName:', pkg.productName);
+            console.log('  main:', pkg.main);
+            console.log('  renderer:', pkg.renderer);
+          "
+
+  build:
+    name: Build (${{ matrix.platform }}-${{ matrix.arch }})
+    needs: validate-release
+    runs-on: ${{ matrix.os }}
+
+    permissions:
+      contents: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-13
+            platform: darwin
+            arch: x64
+          - os: macos-14
+            platform: darwin
+            arch: arm64
+          - os: windows-latest
+            platform: win32
+            arch: x64
+          - os: ubuntu-latest
+            platform: linux
+            arch: x64
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+        env:
+          npm_config_arch: ${{ matrix.arch }}
+
+      - name: Build project
+        run: npm run build
+
+      - name: Verify build outputs
+        shell: bash
+        run: |
+          if [ ! -f lib/main.js ]; then
+            echo "::error::lib/main.js not found"
+            exit 1
+          fi
+          if [ ! -f lib/renderer.js ]; then
+            echo "::error::lib/renderer.js not found"
+            exit 1
+          fi
+          echo "Build verification successful"
+
+      - name: Verify keytar native module
+        shell: bash
+        run: |
+          # Check if keytar binding exists
+          if [ -d "node_modules/keytar" ]; then
+            echo "Keytar module found"
+            # Try to verify the native binding
+            node -e "try { require('keytar'); console.log('Keytar loads successfully'); } catch(e) { console.error('Keytar load error:', e.message); process.exit(1); }"
+          else
+            echo "::warning::Keytar module not found - secure storage will use fallback"
+          fi
+
+      - name: Get version from tag
+        id: get_version
+        shell: bash
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Create distribution package (Unix)
+        if: runner.os != 'Windows'
+        run: |
+          VERSION=${{ steps.get_version.outputs.VERSION }}
+          PLATFORM=${{ matrix.platform }}
+          ARCH=${{ matrix.arch }}
+
+          mkdir -p dist
+
+          # Copy compiled code
+          cp -r lib dist/
+
+          # Copy production dependencies
+          cp -r node_modules dist/
+
+          # Remove dev dependencies from node_modules
+          cd dist
+          npm prune --production --ignore-scripts 2>/dev/null || true
+          cd ..
+
+          # Copy documentation and metadata
+          cp package.json dist/
+          cp README.md dist/ 2>/dev/null || echo "README.md not found"
+          cp INSTALL.md dist/ 2>/dev/null || echo "INSTALL.md not found"
+          cp LICENSE dist/ 2>/dev/null || echo "LICENSE not found"
+
+          # Create zip archive
+          cd dist
+          zip -r "../ai-site-builder-v${VERSION}-${PLATFORM}-${ARCH}.zip" .
+          cd ..
+
+          # Report artifact size
+          ls -lh "ai-site-builder-v${VERSION}-${PLATFORM}-${ARCH}.zip"
+
+      - name: Create distribution package (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $VERSION = "${{ steps.get_version.outputs.VERSION }}"
+          $PLATFORM = "${{ matrix.platform }}"
+          $ARCH = "${{ matrix.arch }}"
+
+          New-Item -ItemType Directory -Force -Path dist
+
+          # Copy compiled code
+          Copy-Item -Recurse lib dist/
+
+          # Copy production dependencies
+          Copy-Item -Recurse node_modules dist/
+
+          # Remove dev dependencies
+          Push-Location dist
+          npm prune --production --ignore-scripts 2>$null
+          Pop-Location
+
+          # Copy documentation and metadata
+          Copy-Item package.json dist/
+          if (Test-Path README.md) { Copy-Item README.md dist/ }
+          if (Test-Path INSTALL.md) { Copy-Item INSTALL.md dist/ }
+          if (Test-Path LICENSE) { Copy-Item LICENSE dist/ }
+
+          # Create zip archive
+          Compress-Archive -Path dist/* -DestinationPath "ai-site-builder-v${VERSION}-${PLATFORM}-${ARCH}.zip"
+
+          # Report artifact size
+          Get-ChildItem "ai-site-builder-v${VERSION}-${PLATFORM}-${ARCH}.zip"
+
+      - name: Upload platform artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: addon-${{ matrix.platform }}-${{ matrix.arch }}
+          path: ai-site-builder-v${{ steps.get_version.outputs.VERSION }}-${{ matrix.platform }}-${{ matrix.arch }}.zip
+          retention-days: 90
+
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: build
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get version from tag
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          pattern: addon-*
+
+      - name: List artifacts
+        run: |
+          echo "Downloaded artifacts:"
+          find artifacts -type f -name "*.zip" | while read f; do
+            echo "  - $(basename $f) ($(du -h "$f" | cut -f1))"
+          done
+
+      - name: Move artifacts to root
+        run: |
+          find artifacts -name "*.zip" -exec mv {} . \;
+          ls -la *.zip
+
+      - name: Generate release notes
+        id: release_notes
+        run: |
+          # Get previous tag
+          PREVIOUS_TAG=$(git describe --abbrev=0 --tags $(git rev-list --tags --skip=1 --max-count=1) 2>/dev/null || echo "")
+
+          # Collect commits
+          if [ -z "$PREVIOUS_TAG" ]; then
+            echo "First release"
+            COMMITS=$(git log --pretty=format:"- %s (%h)" --no-merges)
+          else
+            echo "Previous tag: $PREVIOUS_TAG"
+            COMMITS=$(git log ${PREVIOUS_TAG}..HEAD --pretty=format:"- %s (%h)" --no-merges)
+          fi
+
+          # Categorize commits
+          FEATURES=$(echo "$COMMITS" | grep -E "^- feat" || echo "")
+          FIXES=$(echo "$COMMITS" | grep -E "^- fix" || echo "")
+          DOCS=$(echo "$COMMITS" | grep -E "^- docs" || echo "")
+          OTHER=$(echo "$COMMITS" | grep -vE "^- (feat|fix|docs)" || echo "")
+
+          # Create release notes
+          {
+            echo "RELEASE_NOTES<<EOF"
+            echo "## What's Changed"
+            echo ""
+
+            if [ -n "$FEATURES" ]; then
+              echo "### Features"
+              echo "$FEATURES"
+              echo ""
+            fi
+
+            if [ -n "$FIXES" ]; then
+              echo "### Bug Fixes"
+              echo "$FIXES"
+              echo ""
+            fi
+
+            if [ -n "$DOCS" ]; then
+              echo "### Documentation"
+              echo "$DOCS"
+              echo ""
+            fi
+
+            if [ -n "$OTHER" ]; then
+              echo "### Other Changes"
+              echo "$OTHER"
+              echo ""
+            fi
+
+            echo "## Installation"
+            echo ""
+            echo "Download the appropriate package for your operating system:"
+            echo ""
+            echo "| Platform | Architecture | File |"
+            echo "|----------|--------------|------|"
+            echo "| macOS | Intel (x64) | \`ai-site-builder-v${{ steps.get_version.outputs.VERSION }}-darwin-x64.zip\` |"
+            echo "| macOS | Apple Silicon (arm64) | \`ai-site-builder-v${{ steps.get_version.outputs.VERSION }}-darwin-arm64.zip\` |"
+            echo "| Windows | x64 | \`ai-site-builder-v${{ steps.get_version.outputs.VERSION }}-win32-x64.zip\` |"
+            echo "| Linux | x64 | \`ai-site-builder-v${{ steps.get_version.outputs.VERSION }}-linux-x64.zip\` |"
+            echo ""
+            echo "See [INSTALL.md](INSTALL.md) for detailed installation instructions."
+            echo ""
+
+            if [ -n "$PREVIOUS_TAG" ]; then
+              echo "**Full Changelog**: https://github.com/${{ github.repository }}/compare/${PREVIOUS_TAG}...v${{ steps.get_version.outputs.VERSION }}"
+            fi
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: Release v${{ steps.get_version.outputs.VERSION }}
+          body: ${{ steps.release_notes.outputs.RELEASE_NOTES }}
+          files: |
+            ai-site-builder-v${{ steps.get_version.outputs.VERSION }}-darwin-x64.zip
+            ai-site-builder-v${{ steps.get_version.outputs.VERSION }}-darwin-arm64.zip
+            ai-site-builder-v${{ steps.get_version.outputs.VERSION }}-win32-x64.zip
+            ai-site-builder-v${{ steps.get_version.outputs.VERSION }}-linux-x64.zip
+          draft: false
+          prerelease: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') || contains(github.ref, 'rc') }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

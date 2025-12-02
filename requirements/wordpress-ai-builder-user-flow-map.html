@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WordPress AI Builder - User Flow Map</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: white;
+            border-left: 4px solid #3498db;
+        }
+        h3 {
+            color: #555;
+            margin-top: 30px;
+        }
+        .flow-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        .description {
+            background: #e8f4f8;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid #3498db;
+        }
+        .mermaid {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .overview {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 20px 0;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 6px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .legend-color {
+            width: 30px;
+            height: 20px;
+            border-radius: 4px;
+            border: 2px solid #333;
+        }
+        @media print {
+            .flow-container {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+    </script>
+</head>
+<body>
+    <h1>WordPress AI Builder - User Flow Map</h1>
+    
+    <div class="overview">
+        <h2>Overview</h2>
+        <p>This flow map represents the <strong>non-linear, state-based approach</strong> where users can:</p>
+        <ul>
+            <li>Enter at multiple points based on what they have</li>
+            <li>Work on different pillars in any order</li>
+            <li>Build progressively as sections are ready</li>
+            <li>Leave and return with preserved state</li>
+        </ul>
+    </div>
+
+    <div class="flow-container">
+        <h2>Primary User Flow - First Time Site Creation</h2>
+        <div class="description">
+            This is the main adaptive journey showing all entry points, the workshop interface with three pillars, 
+            and progressive building capabilities. Users can enter from any starting point and work non-linearly.
+        </div>
+        <div class="mermaid">
+graph TB
+    Start([User Opens Add-on]) --> EntryChoice{How would you like to start?}
+    
+    %% Entry Points
+    EntryChoice -->|Has Design| FigmaPath[I have a Figma design]
+    EntryChoice -->|Knows Needs| DescribePath[Describe my project]
+    EntryChoice -->|Wants Speed| TemplatePath[Quick setup<br/>common type]
+    EntryChoice -->|Learning| ExamplesPath[Browse examples]
+    EntryChoice -->|Has WP Site| ExistingPath[Improve existing site]
+
+    %% Figma Path
+    FigmaPath --> FigmaConnect[Connect Figma<br/>Token + URL]
+    FigmaConnect --> FigmaAnalyze{Analyzing Design...}
+    FigmaAnalyze -->|Wireframes| PartialDesign[Structure extracted<br/>Need visual details]
+    FigmaAnalyze -->|High-fidelity| CompleteDesign[Full design extracted<br/>Need functionality]
+    FigmaAnalyze -->|Components only| ComponentsOnly[Design system extracted<br/>Need structure]
+    
+    PartialDesign --> Workshop
+    CompleteDesign --> Workshop
+    ComponentsOnly --> Workshop
+
+    %% Conversational Path
+    DescribePath --> InitialQuestion[What are you building?]
+    InitialQuestion --> AIUnderstanding{AI builds understanding}
+    AIUnderstanding -->|Needs more| ClarifyingQuestions[Smart follow-ups<br/>Max 5 questions]
+    AIUnderstanding -->|Has enough| Workshop
+    ClarifyingQuestions --> AIUnderstanding
+
+    %% Template Path
+    TemplatePath --> TemplateSelect[Choose foundation:<br/>Blog / Portfolio / Business / Shop]
+    TemplateSelect --> TemplateCustomize[Quick customizations]
+    TemplateCustomize --> Workshop
+
+    %% Examples Path
+    ExamplesPath --> BrowseExamples[View sample sites]
+    BrowseExamples --> SelectExample[Choose similar example]
+    SelectExample --> AdaptExample[Adapt to your needs]
+    AdaptExample --> Workshop
+
+    %% Existing Site Path
+    ExistingPath --> ConnectLocal[Select from Local sites]
+    ConnectLocal --> SiteAudit[AI audits current state]
+    SiteAudit --> ImprovementSuggestions[Suggests improvements]
+    ImprovementSuggestions --> Workshop
+
+    %% Main Workshop - The Three Pillars
+    Workshop[["🏗️ WORKSHOP VIEW<br/>Three Pillars Interface"]]
+    
+    Workshop --> ContentPillar{Content Structure}
+    Workshop --> DesignPillar{Design & Theme}
+    Workshop --> FeaturesPillar{Features & Plugins}
+    
+    %% Content Pillar States
+    ContentPillar -->|Empty| ContentEmpty[○ Not started]
+    ContentPillar -->|Working| ContentPartial[◐ Defining structure]
+    ContentPillar -->|Ready| ContentComplete[✓ Ready to build]
+    
+    ContentEmpty -->|Start| ContentBuilder[Define post types<br/>taxonomies, fields]
+    ContentPartial -->|Continue| ContentBuilder
+    ContentBuilder --> ContentReview{Review structure}
+    ContentReview -->|Edit| ContentBuilder
+    ContentReview -->|Approve| ContentComplete
+    
+    %% Design Pillar States
+    DesignPillar -->|Empty| DesignEmpty[○ Not started]
+    DesignPillar -->|Working| DesignPartial[◐ Defining design]
+    DesignPillar -->|Ready| DesignComplete[✓ Ready to build]
+    
+    DesignEmpty -->|Start| ThemeDecision{Theme approach?}
+    DesignPartial -->|Continue| ThemeDecision
+    ThemeDecision -->|Default| GenerateTheme[AI generates from design]
+    ThemeDecision -->|Specific| UseSpecificTheme[Use chosen theme]
+    ThemeDecision -->|Later| SkipTheme[Minimal styling for now]
+    
+    GenerateTheme --> DesignComplete
+    UseSpecificTheme --> DesignComplete
+    SkipTheme --> DesignComplete
+
+    %% Features Pillar States
+    FeaturesPillar -->|Empty| FeaturesEmpty[○ Not started]
+    FeaturesPillar -->|Working| FeaturesPartial[◐ Selecting features]
+    FeaturesPillar -->|Ready| FeaturesComplete[✓ Ready to build]
+    
+    FeaturesEmpty -->|Start| FeatureAnalysis[AI analyzes needs]
+    FeaturesPartial -->|Continue| FeatureAnalysis
+    FeatureAnalysis --> BuildVsPlugin{Build vs Plugin<br/>Decision Engine}
+    
+    BuildVsPlugin -->|Build| GenerateCode[Generate custom code]
+    BuildVsPlugin -->|Plugin| RecommendPlugin[Recommend plugins]
+    BuildVsPlugin -->|Hybrid| BothApproach[Some build, some plugins]
+    
+    GenerateCode --> FeaturesComplete
+    RecommendPlugin --> FeaturesComplete
+    BothApproach --> FeaturesComplete
+
+    %% Progressive Building
+    ContentComplete --> ReadyToBuild{What's ready<br/>to build?}
+    DesignComplete --> ReadyToBuild
+    FeaturesComplete --> ReadyToBuild
+    
+    ReadyToBuild -->|Partial| BuildPartial[Build what's ready]
+    ReadyToBuild -->|Everything| BuildAll[Build complete site]
+    
+    BuildPartial --> Building[["🔄 BUILDING<br/>Progress indicators"]]
+    BuildAll --> Building
+    
+    Building --> BuildProgress{Monitor progress}
+    BuildProgress -->|Content| BuildingContent[Creating post types<br/>Setting up ACF]
+    BuildProgress -->|Design| BuildingTheme[Generating theme<br/>Applying styles]
+    BuildProgress -->|Features| BuildingFeatures[Installing plugins<br/>Configuring features]
+    
+    BuildingContent -->|Complete| PartialComplete[Structure ready<br/>Continue working?]
+    BuildingTheme -->|Complete| PartialComplete
+    BuildingFeatures -->|Complete| PartialComplete
+    
+    PartialComplete -->|Continue| Workshop
+    PartialComplete -->|Done for now| SiteReady
+    
+    BuildAll --> SiteReady[["✅ SITE READY<br/>WordPress configured"]]
+    
+    %% Post-Build Actions
+    SiteReady --> PostBuild{Next actions}
+    PostBuild -->|Add content| ContentAssist[AI-assisted content]
+    PostBuild -->|Refine| ReturnToWorkshop[Back to workshop]
+    PostBuild -->|New site| StartAnother[Create another site]
+    PostBuild -->|Done| Exit([Exit add-on])
+    
+    ReturnToWorkshop --> Workshop
+    StartAnother --> EntryChoice
+
+    %% Style definitions
+    classDef entryPoint fill:#e1f5e1,stroke:#4caf50,stroke-width:2px
+    classDef workshop fill:#fff3e0,stroke:#ff9800,stroke-width:3px
+    classDef building fill:#e3f2fd,stroke:#2196f3,stroke-width:2px
+    classDef complete fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
+    classDef decision fill:#fce4ec,stroke:#e91e63,stroke-width:2px
+    
+    class FigmaPath,DescribePath,TemplatePath,ExamplesPath,ExistingPath entryPoint
+    class Workshop workshop
+    class Building building
+    class SiteReady complete
+    class EntryChoice,ThemeDecision,BuildVsPlugin,ReadyToBuild decision
+        </div>
+    </div>
+
+    <div class="flow-container">
+        <h2>Build vs Plugin Decision Flow</h2>
+        <div class="description">
+            This critical decision engine determines whether to generate custom code or recommend a plugin for each feature.
+            The logic considers complexity, maintenance needs, client capabilities, and whether good plugin solutions exist.
+        </div>
+        <div class="mermaid">
+graph TB
+    Feature[Feature Request] --> Evaluate{Evaluate Complexity}
+    
+    Evaluate --> CheckConfig{Needs admin<br/>configuration?}
+    CheckConfig -->|No| BuildSimple[BUILD IT<br/>Hard-coded is fine]
+    CheckConfig -->|Yes| CheckACF{Can ACF<br/>handle UI?}
+    
+    CheckACF -->|No| UsePlugin1[USE PLUGIN<br/>Needs custom admin UI]
+    CheckACF -->|Yes| CheckGrowth{Will requirements<br/>grow?}
+    
+    CheckGrowth -->|No| BuildACF[BUILD IT<br/>with ACF for admin UI]
+    CheckGrowth -->|Yes| CheckPlugin{Good plugin<br/>exists?}
+    
+    CheckPlugin -->|Yes| UsePlugin2[USE PLUGIN<br/>Why reinvent?]
+    CheckPlugin -->|No| BuildComplex[BUILD IT<br/>No good option exists]
+    
+    %% Security/External overrides
+    Feature --> SecurityCheck{Security or<br/>external service?}
+    SecurityCheck -->|Yes| UsePluginSecurity[ALWAYS PLUGIN<br/>Too critical]
+    
+    %% Styling
+    classDef buildIt fill:#c8e6c9,stroke:#388e3c,stroke-width:2px
+    classDef usePlugin fill:#ffccbc,stroke:#d84315,stroke-width:2px
+    
+    class BuildSimple,BuildACF,BuildComplex buildIt
+    class UsePlugin1,UsePlugin2,UsePluginSecurity usePlugin
+        </div>
+    </div>
+
+    <div class="flow-container">
+        <h2>Workshop State Management</h2>
+        <div class="description">
+            Shows how each of the three pillars can be in different states simultaneously, 
+            allowing users to work on them in any order and build progressively.
+        </div>
+        <div class="mermaid">
+graph LR
+    subgraph "Content Structure Pillar"
+        C1[Empty ○] --> C2[Partial ◐]
+        C2 --> C3[Complete ✓]
+        C3 --> C4[Building 🔄]
+        C4 --> C5[Built ✅]
+    end
+    
+    subgraph "Design & Theme Pillar"
+        D1[Empty ○] --> D2[Partial ◐]
+        D2 --> D3[Complete ✓]
+        D3 --> D4[Building 🔄]
+        D4 --> D5[Built ✅]
+    end
+    
+    subgraph "Features & Plugins Pillar"
+        F1[Empty ○] --> F2[Partial ◐]
+        F2 --> F3[Complete ✓]
+        F3 --> F4[Building 🔄]
+        F4 --> F5[Built ✅]
+    end
+    
+    C3 -.->|Can build<br/>independently| Build1[Partial Build]
+    D3 -.->|Can build<br/>independently| Build1
+    F3 -.->|Can build<br/>independently| Build1
+    
+    C5 --> Continue[Continue with<br/>other pillars]
+    D5 --> Continue
+    F5 --> Continue
+        </div>
+    </div>
+
+    <div class="flow-container">
+        <h2>User Type Journey Variations</h2>
+        
+        <h3>Non-Technical User Journey</h3>
+        <div class="description">
+            Emphasizes guidance, visual feedback, and safety. Uses plain language and provides reassurance at each step.
+        </div>
+        <div class="mermaid">
+graph LR
+    Start([Non-tech user starts]) --> Describe[Describes in<br/>plain language]
+    Describe --> AIGuides[AI asks simple<br/>questions, no jargon]
+    AIGuides --> VisualProposal[Shows visual site map<br/>Clear explanations]
+    VisualProposal --> SimpleApproval[Big approve button<br/>Safety messaging]
+    SimpleApproval --> AutoBuild[Everything automated<br/>Progress visible]
+    AutoBuild --> Success[Site ready<br/>Clear next steps]
+    
+    style Start fill:#e8f5e9
+    style Success fill:#c8e6c9
+        </div>
+
+        <h3>Developer Journey</h3>
+        <div class="description">
+            Fast path with technical details, direct code editing, and batch operations. Minimal hand-holding.
+        </div>
+        <div class="mermaid">
+graph LR
+    Start([Developer starts]) --> QuickChoice[Template or<br/>direct specs]
+    QuickChoice --> TechView[Technical details<br/>immediately visible]
+    TechView --> DirectEdit[Edit JSON/code<br/>directly]
+    DirectEdit --> BatchApprove[Bulk approve<br/>or selective]
+    BatchApprove --> FastBuild[Rapid execution<br/>Terminal output]
+    FastBuild --> CodeAccess[Direct file access<br/>WP-CLI ready]
+    
+    style Start fill:#e3f2fd
+    style CodeAccess fill:#bbdefb
+        </div>
+
+        <h3>Agency Journey</h3>
+        <div class="description">
+            Design-first approach with client presentation capabilities and multi-site awareness.
+        </div>
+        <div class="mermaid">
+graph LR
+    Start([Agency starts]) --> FigmaImport[Import Figma<br/>design system]
+    FigmaImport --> MultiSite[Project setup<br/>Multi-site aware]
+    MultiSite --> ClientReview[Generate client<br/>preview]
+    ClientReview --> Production[Build production<br/>site]
+    Production --> Handoff[Documentation<br/>Training ready]
+    
+    style Start fill:#fff3e0
+    style Handoff fill:#ffe0b2
+        </div>
+    </div>
+
+    <div class="flow-container">
+        <h2>Adaptive Interface Behavior</h2>
+        <div class="description">
+            The interface adapts in real-time based on user behavior signals, providing the right level of detail for each user type.
+        </div>
+        <div class="mermaid">
+graph TB
+    subgraph "Behavior Detection"
+        B1[User skips help] --> S1{Count > 3?}
+        B2[Reads help text] --> S2{Count > 5?}
+        B3[Uses shortcuts] --> S3{Any usage?}
+        B4[Edits code] --> S4{Direct edits?}
+    end
+    
+    subgraph "Interface Adaptations"
+        S1 -->|Yes| A1[Hide verbose help<br/>Show technical details]
+        S2 -->|Yes| A2[Maintain guidance<br/>Offer tutorials]
+        S3 -->|Yes| A3[Enable command palette<br/>Batch operations]
+        S4 -->|Yes| A4[Show code views<br/>Advanced options]
+    end
+    
+    A1 --> UI[Adapted Interface]
+    A2 --> UI
+    A3 --> UI
+    A4 --> UI
+        </div>
+    </div>
+
+    <div class="flow-container">
+        <h2>Error Recovery Flow</h2>
+        <div class="description">
+            Graceful error handling with clear recovery paths. State is preserved so users never lose work.
+        </div>
+        <div class="mermaid">
+graph TB
+    Error([Error Occurs]) --> ErrorType{Error Type}
+    
+    ErrorType -->|Figma| FigmaError[Can't access<br/>design]
+    ErrorType -->|Build| BuildError[Build<br/>failed]
+    ErrorType -->|Plugin| PluginError[Plugin<br/>conflict]
+    ErrorType -->|Theme| ThemeError[Theme<br/>issue]
+    
+    FigmaError --> FigmaRecovery[Manual input<br/>or different file]
+    BuildError --> BuildRecovery[Show details<br/>Offer rollback]
+    PluginError --> PluginRecovery[Alternatives<br/>or skip]
+    ThemeError --> ThemeRecovery[Use default<br/>theme]
+    
+    FigmaRecovery --> ReturnWorkshop[Return to workshop<br/>State preserved]
+    BuildRecovery --> ReturnWorkshop
+    PluginRecovery --> ReturnWorkshop
+    ThemeRecovery --> ReturnWorkshop
+    
+    ReturnWorkshop --> Continue([Continue working])
+    
+    style Error fill:#ffebee,stroke:#f44336
+    style Continue fill:#e8f5e9,stroke:#4caf50
+        </div>
+    </div>
+
+    <div class="flow-container">
+        <h2>Progressive Building Example</h2>
+        <div class="description">
+            Shows how a user might build their site incrementally, adding pieces as they become ready.
+        </div>
+        <div class="mermaid">
+graph LR
+    subgraph "Session 1"
+        A1[Define content<br/>structure] --> A2[Build content<br/>architecture]
+        A2 --> A3[Site has structure<br/>no design yet]
+    end
+    
+    subgraph "Session 2 (Days later)"
+        B1[Upload Figma<br/>design] --> B2[Generate theme]
+        B2 --> B3[Apply styling<br/>to existing structure]
+    end
+    
+    subgraph "Session 3 (Week later)"
+        C1[Decide on<br/>features] --> C2[Install plugins]
+        C2 --> C3[Configure and<br/>integrate]
+    end
+    
+    A3 --> B1
+    B3 --> C1
+    C3 --> Complete[Complete site<br/>built incrementally]
+    
+    style Complete fill:#c8e6c9
+        </div>
+    </div>
+
+    <div class="flow-container">
+        <h2>Key Decision Points</h2>
+        <div class="description">
+            Critical moments where user decisions significantly impact the journey and final outcome.
+        </div>
+        <div class="mermaid">
+graph TB
+    D1[Entry Method<br/>Decision] -->|Determines| I1[Initial path and<br/>UI adaptation level]
+    
+    D2[Design Fidelity<br/>Decision] -->|Determines| I2[Theme strategy and<br/>what can be built]
+    
+    D3[Build vs Plugin<br/>Decision] -->|Determines| I3[Code generation vs<br/>plugin installation]
+    
+    D4[Build Timing<br/>Decision] -->|Determines| I4[Partial vs complete<br/>site creation]
+    
+    D5[Client Capability<br/>Assessment] -->|Determines| I5[Maintenance approach<br/>and complexity level]
+    
+    style D1 fill:#fce4ec,stroke:#e91e63
+    style D2 fill:#fce4ec,stroke:#e91e63
+    style D3 fill:#fce4ec,stroke:#e91e63
+    style D4 fill:#fce4ec,stroke:#e91e63
+    style D5 fill:#fce4ec,stroke:#e91e63
+    
+    style I1 fill:#e8f5e9
+    style I2 fill:#e8f5e9
+    style I3 fill:#e8f5e9
+    style I4 fill:#e8f5e9
+    style I5 fill:#e8f5e9
+        </div>
+    </div>
+
+    <div class="legend">
+        <h3>Legend:</h3>
+        <div class="legend-item">
+            <div class="legend-color" style="background: #e1f5e1;"></div>
+            <span>Entry Points</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background: #fff3e0;"></div>
+            <span>Workshop Interface</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background: #e3f2fd;"></div>
+            <span>Building Process</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background: #f3e5f5;"></div>
+            <span>Completion State</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background: #fce4ec;"></div>
+            <span>Decision Points</span>
+        </div>
+    </div>
+</body>
+</html>
