@@ -26,7 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Content strategy and SEO planning
 - Design system configuration
 - Responsive layout settings
-- Integration with Local by Flywheel
+- Integration with Local by WP Engine
 - Secure API key storage using keytar
 
 ### Changed

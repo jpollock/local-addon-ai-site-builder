@@ -1,6 +1,6 @@
 # AI Site Builder User Guide
 
-A comprehensive guide to using the AI Site Builder addon for Local by Flywheel.
+A comprehensive guide to using the AI Site Builder addon for Local by WP Engine.
 
 ## Table of Contents
 
@@ -23,7 +23,7 @@ A comprehensive guide to using the AI Site Builder addon for Local by Flywheel.
 
 Before using AI Site Builder, ensure you have:
 
-1. **Local by Flywheel** installed (v6.0.0+)
+1. **Local by WP Engine** installed (v6.0.0+)
 2. **A WordPress site** created in Local
 3. **An API key** from at least one AI provider:
    - [Anthropic Claude](https://console.anthropic.com/)
@@ -32,7 +32,7 @@ Before using AI Site Builder, ensure you have:
 
 ### Opening AI Site Builder
 
-1. Launch **Local by Flywheel**
+1. Launch **Local by WP Engine**
 2. Select a WordPress site from your sites list
 3. Look for **AI Site Builder** in the left sidebar or site tools
 4. Click to open the addon interface

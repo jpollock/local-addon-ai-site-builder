@@ -1,6 +1,6 @@
 # Jekyll configuration for GitHub Pages
 title: AI Site Builder for Local
-description: AI-powered WordPress site scaffolding for Local by Flywheel
+description: AI-powered WordPress site scaffolding for Local by WP Engine
 baseurl: "/local-addon-ai-site-builder"
 url: "https://jpollock.github.io"
 

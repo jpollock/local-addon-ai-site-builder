@@ -31,12 +31,14 @@ assignees: ''
 ## Environment
 
 **Desktop:**
+
 - OS: [e.g. macOS 14.0, Windows 11, Ubuntu 22.04]
-- Local by Flywheel Version: [e.g. 6.5.0]
+- Local by WP Engine Version: [e.g. 6.5.0]
 - Addon Version: [e.g. 0.1.0]
 - Node.js Version (if building from source): [e.g. 18.0.0]
 
 **Additional Context:**
+
 - Browser (if relevant): [e.g. Chrome 120]
 - AI Provider: [e.g. Claude, OpenAI, Gemini]
 

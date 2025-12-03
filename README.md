@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Version](https://img.shields.io/badge/version-0.1.0-green.svg)](package.json)
 
-AI-powered WordPress site scaffolding addon for [Local by Flywheel](https://localwp.com/). Streamline your WordPress development workflow with intelligent site planning and structure generation.
+AI-powered WordPress site scaffolding addon for [Local by WP Engine](https://localwp.com/). Streamline your WordPress development workflow with intelligent site planning and structure generation.
 
 ## Features
 
@@ -19,7 +19,7 @@ AI-powered WordPress site scaffolding addon for [Local by Flywheel](https://loca
 
 ## Requirements
 
-- **Local by Flywheel** v6.0.0 or higher
+- **Local by WP Engine** v6.0.0 or higher
 - **Node.js** v18.0.0 or higher
 - **Operating System**: macOS, Windows, or Linux
 
@@ -59,7 +59,7 @@ API keys are stored securely in your system's keychain and never exposed in logs
 
 ### Setting Up API Keys
 
-1. Open Local by Flywheel
+1. Open Local by WP Engine
 2. Navigate to the AI Site Builder addon
 3. Click on Settings
 4. Enter your API key(s)
@@ -248,7 +248,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Acknowledgments
 
-- Built for [Local by Flywheel](https://localwp.com/) by WP Engine
+- Built for [Local by WP Engine](https://localwp.com/) by WP Engine
 - Powered by AI models from Anthropic, OpenAI, and Google
 - Inspired by the WordPress community
 

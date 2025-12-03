@@ -40,7 +40,7 @@ Closes #
 - [ ] All existing tests pass
 - [ ] New tests added for new functionality
 - [ ] Manual testing performed
-- [ ] Tested on Local by Flywheel
+- [ ] Tested on Local by WP Engine
 
 ### Test Coverage
 

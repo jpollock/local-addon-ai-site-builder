@@ -1,6 +1,6 @@
 # Installation Guide
 
-Complete installation instructions for the AI Site Builder addon for Local by Flywheel.
+Complete installation instructions for the AI Site Builder addon for Local by WP Engine.
 
 ## Table of Contents
 
@@ -17,7 +17,7 @@ Complete installation instructions for the AI Site Builder addon for Local by Fl
 
 ### Required Software
 
-1. **Local by Flywheel** (v6.0.0 or higher)
+1. **Local by WP Engine** (v6.0.0 or higher)
    - Download from: https://localwp.com/
    - Install and complete initial setup
 
@@ -159,7 +159,7 @@ cp -r . ~/.config/Local/addons/ai-site-builder/
 
 After installation, you need to configure at least one AI provider:
 
-1. **Open Local by Flywheel**
+1. **Open Local by WP Engine**
 2. **Navigate to AI Site Builder**
    - Look for "AI Site Builder" in the left sidebar
    - Click to open the addon interface

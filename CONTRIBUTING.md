@@ -21,7 +21,7 @@ Before creating bug reports, please check existing issues to avoid duplicates.
 - Screenshots (if applicable)
 - Environment details:
   - OS version
-  - Local by Flywheel version
+  - Local by WP Engine version
   - Node.js version (if building from source)
   - Addon version
 
@@ -110,7 +110,7 @@ Enhancement suggestions are welcome! Please provide:
 
 - Node.js 18.0.0 or higher
 - npm 9.0.0 or higher
-- Local by Flywheel 6.0.0 or higher
+- Local by WP Engine 6.0.0 or higher
 - Git
 
 ### Setup Instructions

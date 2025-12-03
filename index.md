@@ -5,7 +5,7 @@ title: AI Site Builder
 
 # AI Site Builder for Local
 
-AI-powered WordPress site scaffolding for [Local by Flywheel](https://localwp.com/).
+AI-powered WordPress site scaffolding for [Local by WP Engine](https://localwp.com/).
 
 ## Features
 
@@ -43,7 +43,7 @@ See [Installation Guide](INSTALL/) for detailed instructions.
 
 ## Requirements
 
-- Local by Flywheel v6.0.0+
+- Local by WP Engine v6.0.0+
 - API key from Claude, OpenAI, or Google Gemini
 
 ## Links

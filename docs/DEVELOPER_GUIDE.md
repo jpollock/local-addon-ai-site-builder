@@ -25,7 +25,7 @@ AI Site Builder runs within Local's Electron environment with two separate proce
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                        Local by Flywheel                     │
+│                        Local by WP Engine                     │
 ├─────────────────────────────────────────────────────────────┤
 │                                                              │
 │  ┌─────────────────────┐      IPC      ┌──────────────────┐ │
@@ -74,7 +74,7 @@ The renderer process handles:
 ### Prerequisites
 
 - Node.js 18+ and npm
-- Local by Flywheel 6.0+
+- Local by WP Engine 6.0+
 - Git
 
 ### Initial Setup
